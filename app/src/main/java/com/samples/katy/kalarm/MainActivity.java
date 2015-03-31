@@ -61,23 +61,23 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    public void cancelRepeatingTimer(View view){
-
-        Switch alarmSwitch = (Switch) view.findViewById(R.id.on_off_switch);
-        Context context = this.getApplicationContext();
-        if (alarmSwitch.isChecked()) { //On
-            alarmManagerReceiver.setAlarms(context);
-        }
-        else { //Off
-
-            Alarm alarm = alarmDatabaseHandler.getAlarm(1);
-
-            alarm.setEnable(0);
-            alarmDatabaseHandler.updateAlarm(alarm);
-
-            alarmManagerReceiver.cancelAlarm(context);
-            Toast.makeText(context, "Alarm is off", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void cancelRepeatingTimer(View view){
+//
+//        Switch alarmSwitch = (Switch) view.findViewById(R.id.on_off_switch);
+//        Context context = this.getApplicationContext();
+//        if (alarmSwitch.isChecked()) { //On
+//            alarmManagerReceiver.setAlarms(context);
+//        }
+//        else { //Off
+//
+//            Alarm alarm = alarmDatabaseHandler.getAlarm(1);
+//
+//            alarm.setEnable(0);
+//            alarmDatabaseHandler.updateAlarm(alarm);
+//
+//            alarmManagerReceiver.cancelAlarm(context);
+//            Toast.makeText(context, "Alarm is off", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
 }

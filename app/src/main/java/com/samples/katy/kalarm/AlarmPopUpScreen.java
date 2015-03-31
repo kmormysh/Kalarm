@@ -2,6 +2,10 @@ package com.samples.katy.kalarm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
@@ -17,6 +21,7 @@ public class AlarmPopUpScreen extends Activity {
 
     public final String TAG = this.getClass().getSimpleName();
     private PowerManager.WakeLock mWakeLock;
+    private MediaPlayer mPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
 
     @Override
@@ -57,6 +62,26 @@ public class AlarmPopUpScreen extends Activity {
                 }
             }
         };
+
+        //Play alarm tone
+        String tone = RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI;
+        mPlayer = new MediaPlayer();
+        try {
+            if (tone != null && !tone.equals("")) {
+                Uri toneUri = Uri.parse(tone);
+                if (toneUri != null) {
+                    mPlayer.setDataSource(this, toneUri);
+                    mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mPlayer.setLooping(true);
+                    mPlayer.setVolume(1f, 1f);
+                    mPlayer.prepare();
+                    mPlayer.start();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
     }

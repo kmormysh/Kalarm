@@ -7,6 +7,6 @@
         <!--android:color="#fff" />-->
     <!--<corners android:bottomLeftRadius="5dp" />-->
     <size android:height="45dp" android:width="45dp"/>
-    <gradient android:centerColor="@color/button_material_light" />
+    <gradient android:centerColor="@color/button_material_light"/>
 
 </shape>

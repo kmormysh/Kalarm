@@ -6,7 +6,8 @@
     android:layout_margin="5sp"
     android:layout_marginTop="5sp"
     android:orientation="vertical"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+    android:theme="@android:style/Theme.Holo"
+    android:background="@color/button_material_dark">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,7 +26,7 @@
             android:singleLine="true"
             android:textOff="MON"
             android:textOn="MON"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <ToggleButton
             android:id="@+id/btn_tue"

@@ -10,7 +10,8 @@
         android:id="@+id/alarm_time"
         android:layout_margin="10dp"
         android:textSize="20sp"
-        android:text="10:10" />
+        android:text="10:10"
+        android:textColor="@color/switch_thumb_normal_material_light"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +22,8 @@
         android:layout_marginLeft="5sp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/alarm_time"
-        android:layout_toEndOf="@+id/alarm_time" />
+        android:layout_toEndOf="@+id/alarm_time"
+        android:textColor="@color/switch_thumb_normal_material_light"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,18 +33,19 @@
         android:layout_below="@+id/alarm_name"
         android:layout_toRightOf="@+id/alarm_time"
         android:layout_toEndOf="@+id/alarm_time"
-        android:layout_marginBottom="5sp"/>
+        android:layout_marginBottom="5sp"
+        android:textColor="@color/switch_thumb_normal_material_light"/>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/on_off_switch"
-        android:width="60sp"
-        android:switchMinWidth="60sp"
         android:layout_alignTop="@+id/alarm_time"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/alarm_time"
-        android:layout_marginRight="10sp"/>
+        android:layout_marginRight="10sp"
+        android:width="60sp"
+        android:switchMinWidth="30sp"/>
 
 </RelativeLayout>

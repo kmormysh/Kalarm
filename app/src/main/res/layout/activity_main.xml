@@ -6,13 +6,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@android:color/background_dark"
     tools:context=".MainActivity">
 
     <ListView
         android:id="@+id/alarm_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 
     <LinearLayout
@@ -29,7 +29,7 @@
             android:text="+"
             android:textSize="30sp"
             android:fontFamily="sans-serif-thick"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@android:color/black"
             android:background="@drawable/round_button" />
     </LinearLayout>
 
