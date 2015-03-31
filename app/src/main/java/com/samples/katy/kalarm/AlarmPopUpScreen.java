@@ -29,6 +29,26 @@ public class AlarmPopUpScreen extends Activity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.alarm_pop_up_screen);
 
+        //Play alarm tone
+        String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
+        mPlayer = new MediaPlayer();
+        try {
+            if (tone != null && !tone.equals("")) {
+                Uri toneUri = Uri.parse(tone);
+                if (toneUri != null) {
+                    mPlayer.setDataSource(this, toneUri);
+                    mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mPlayer.setLooping(true);
+                    mPlayer.setVolume(0.6f, 0.6f);
+                    mPlayer.prepare();
+                    mPlayer.start();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         TextView btnAlarmTime = (TextView) findViewById(R.id.alarmTime);
         btnAlarmTime.setText(getIntent().getStringExtra(AlarmManagerReceiver.TIME));
 
@@ -36,7 +56,8 @@ public class AlarmPopUpScreen extends Activity {
         snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                
+                mPlayer.stop();
             }
         });
 
@@ -44,6 +65,7 @@ public class AlarmPopUpScreen extends Activity {
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPlayer.stop();
                 finish();
             }
         });
@@ -62,26 +84,6 @@ public class AlarmPopUpScreen extends Activity {
                 }
             }
         };
-
-        //Play alarm tone
-        String tone = RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI;
-        mPlayer = new MediaPlayer();
-        try {
-            if (tone != null && !tone.equals("")) {
-                Uri toneUri = Uri.parse(tone);
-                if (toneUri != null) {
-                    mPlayer.setDataSource(this, toneUri);
-                    mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mPlayer.setLooping(true);
-                    mPlayer.setVolume(1f, 1f);
-                    mPlayer.prepare();
-                    mPlayer.start();
-
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
     }
