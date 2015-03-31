@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_time"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:text="10:10" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_name"
+        android:text="Alarm 1"
+        android:textSize="20sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginLeft="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/alarm_time"
+        android:layout_toEndOf="@+id/alarm_time" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_days"
+        android:text="weekend"
+        android:layout_marginLeft="5sp"
+        android:layout_below="@+id/alarm_name"
+        android:layout_toRightOf="@+id/alarm_time"
+        android:layout_toEndOf="@+id/alarm_time"
+        android:layout_marginBottom="5sp"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/on_off_switch"
+        android:width="60sp"
+        android:switchMinWidth="60sp"
+        android:layout_alignTop="@+id/alarm_time"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/alarm_time"
+        android:layout_marginRight="10sp"/>
+
+</RelativeLayout>

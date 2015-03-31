@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/alarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150sp"
+        android:text="8:00"
+        android:textSize="@dimen/abc_text_size_display_3_material" />
+
+
+    <Button
+        android:id="@+id/snooze"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dismiss"
+        android:layout_margin="5sp"
+        android:height="130sp"
+        android:text="Snooze"
+        android:textSize="32dp"
+        android:background="@android:drawable/toast_frame" />
+
+    <Button
+        android:id="@+id/dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5sp"
+        android:height="130sp"
+        android:text="Dismiss"
+        android:textSize="32dp"
+        android:background="@android:drawable/toast_frame" />
+
+</RelativeLayout>
