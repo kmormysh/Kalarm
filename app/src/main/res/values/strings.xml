@@ -4,5 +4,9 @@
     <string name="app_name">Kalarm</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string-array name="menu">
+        <item>Details</item>
+        <item>Delete</item>
+    </string-array>
 
 </resources>

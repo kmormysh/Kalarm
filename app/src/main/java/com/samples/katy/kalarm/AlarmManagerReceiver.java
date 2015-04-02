@@ -34,7 +34,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         List<Alarm> alarms = alarmDatabaseHandler.getAllAlarms();
 
         for (Alarm alarm : alarms) {
-            if (alarm.getEnable() == 1) { //is On
+            if (alarm.getEnable()) { //is On
                 PendingIntent pendingIntent = createPendingIntent(context, alarm);
 
                 Calendar calendar = Calendar.getInstance();
@@ -71,7 +71,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
                     for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; ++dayOfWeek) {
                         if (alarm.getDays()[dayOfWeek - 1]
                                 && dayOfWeek <= nowDay
-                                && alarm.getRepeat_weekly() == 1) {
+                                && alarm.getRepeat_weekly()) {
                             calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
                             calendar.add(Calendar.WEEK_OF_YEAR, 1);
 
@@ -111,7 +111,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
         if (alarms != null) {
             for (Alarm alarm : alarms) {
-                if (alarm.getEnable() == 0) {
+                if (alarm.getEnable()) {
                     PendingIntent pIntent = createPendingIntent(context, alarm);
 
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

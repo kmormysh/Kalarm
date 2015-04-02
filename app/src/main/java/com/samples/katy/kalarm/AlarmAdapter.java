@@ -62,11 +62,11 @@ public class AlarmAdapter extends BaseAdapter {
                 Alarm newAlarm = getAlarm(pos);
 
                 if (alarmSwitch.isChecked()) { //On
-                    newAlarm.setEnable(1);
+                    newAlarm.setEnable(true);
                     MainActivity.alarmDatabaseHandler.updateAlarm(newAlarm);
                     MainActivity.alarmManagerReceiver.setAlarms(MainActivity.context);
                 } else { //Off
-                    newAlarm.setEnable(0);
+                    newAlarm.setEnable(false);
                     MainActivity.alarmDatabaseHandler.updateAlarm(newAlarm);
                     MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
                 }
@@ -75,26 +75,26 @@ public class AlarmAdapter extends BaseAdapter {
             }
         });
 
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                getAlarmList();
-                Alarm newAlarm = getAlarm(pos);
-                MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
-                MainActivity.alarmDatabaseHandler.deleteAlarm(newAlarm);
-                getAlarmList();
-
-                notifyDataSetChanged();
-                return false;
-            }
-        });
+//        view.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                getAlarmList();
+//                Alarm newAlarm = getAlarm(pos);
+//                MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
+//                MainActivity.alarmDatabaseHandler.deleteAlarm(newAlarm);
+//                getAlarmList();
+//
+//                notifyDataSetChanged();
+//                return false;
+//            }
+//        });
 
 
         TextView alarm_time = (TextView) view.findViewById(R.id.alarm_time);
         TextView alarm_name = (TextView) view.findViewById(R.id.alarm_name);
         TextView alarm_days = (TextView) view.findViewById(R.id.alarm_days);
 
-        alarmSwitch.setChecked(alarm.getEnable() > 0 ? true : false);
+        alarmSwitch.setChecked(alarm.getEnable());
         alarm_time.setText(alarm.getAlarm_time());
         alarm_time.setTextColor(Color.WHITE);
         alarm_name.setText(alarm.getAlarm_name());

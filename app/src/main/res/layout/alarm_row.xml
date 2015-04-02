@@ -46,6 +46,7 @@
         android:layout_alignBottom="@+id/alarm_time"
         android:layout_marginRight="10sp"
         android:width="60sp"
-        android:switchMinWidth="30sp"/>
+        android:switchMinWidth="30sp"
+        android:focusable="false"/>
 
 </RelativeLayout>

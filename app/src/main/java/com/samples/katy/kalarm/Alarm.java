@@ -8,19 +8,25 @@ import java.util.Calendar;
 
 public class Alarm {
 
-    private int keyID;
+    private int id;
     private String alarm_time;
     private String alarm_name;
     private String alarm_days;
-    private int repeat_weekly;
-    private int enable;
+    private boolean repeat_weekly;
+    private boolean enable;
     private boolean[] days = new boolean[7];
 
-    public Alarm() { }
+    public static final String DAYS = "days";
+    public static final String TIME = "time";
+    public static final String NAME = "name";
+    public static final String ID = "id";
+
+    public Alarm() {
+    }
 
     // create custom alarm
     public Alarm(String alarm_time, String alarm_name, boolean[] days,
-                 int repeat_weekly, int enable) {
+                 boolean repeat_weekly, boolean enable) {
         this.alarm_time = alarm_time;
         this.alarm_name = alarm_name;
         this.days = days;
@@ -30,15 +36,12 @@ public class Alarm {
     }
 
     // read from DB
-    public Alarm(int keyID, String alarm_time, String alarm_name, String alarm_days,
-                 int repeat_weekly, int enable) {
-        this.keyID = keyID;
-        this.alarm_time = alarm_time;
-        this.alarm_name = alarm_name;
+    public Alarm(int id, String alarm_time, String alarm_name, String alarm_days,
+                 boolean repeat_weekly, boolean enable) {
+        this(alarm_time, alarm_name, new boolean[7], repeat_weekly, enable);
+        this.id = id;
         this.alarm_days = alarm_days;
         this.days = parseDaysStringToInt(alarm_days);
-        this.repeat_weekly = repeat_weekly;
-        this.enable = enable;
     }
 
     public String getAlarm_time() {
@@ -65,27 +68,27 @@ public class Alarm {
         this.alarm_days = alarm_day;
     }
 
-    public int getKeyID() {
-        return keyID;
+    public int getId() {
+        return id;
     }
 
-    public void setKeyID(int keyID) {
-        this.keyID = keyID;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getRepeat_weekly() {
+    public boolean getRepeat_weekly() {
         return repeat_weekly;
     }
 
-    public void setRepeat_weekly(int repeat_weekly) {
+    public void setRepeat_weekly(boolean repeat_weekly) {
         this.repeat_weekly = repeat_weekly;
     }
 
-    public int getEnable() {
+    public boolean getEnable() {
         return enable;
     }
 
-    public void setEnable(int enable) {
+    public void setEnable(boolean enable) {
         this.enable = enable;
     }
 
@@ -98,53 +101,58 @@ public class Alarm {
         setAlarm_day(parseDaysIntToString(days));
     }
 
-    public String parseDaysIntToString (boolean[] days) {
+    public static String parseDaysIntToString(boolean[] days) {
         String parsedDays = "";
-        if (days[Calendar.MONDAY-1])
+        if (days[Calendar.MONDAY - 1])
             parsedDays += "MON ";
-        if (days[Calendar.TUESDAY-1])
+        if (days[Calendar.TUESDAY - 1])
             parsedDays += "TUE ";
-        if (days[Calendar.WEDNESDAY-1])
+        if (days[Calendar.WEDNESDAY - 1])
             parsedDays += "WED ";
-        if (days[Calendar.THURSDAY-1])
+        if (days[Calendar.THURSDAY - 1])
             parsedDays += "THU ";
-        if (days[Calendar.FRIDAY-1])
+        if (days[Calendar.FRIDAY - 1])
             parsedDays += "FRI ";
-        if (days[Calendar.SATURDAY-1])
+        if (days[Calendar.SATURDAY - 1])
             parsedDays += "SAT ";
-        if (days[Calendar.SUNDAY-1])
+        if (days[Calendar.SUNDAY - 1])
             parsedDays += "SUN";
 
         return parsedDays;
     }
 
-    public boolean[] parseDaysStringToInt (String days) {
+    public static boolean[] parseDaysStringToInt(String days) {
 
         boolean[] parsedDays = new boolean[7];
-        String[] repeatDays = days.split(",");
-        for (int i = 0; i < repeatDays.length; i++){
-            switch (repeatDays[i]) {
-                case "MON ":
-                    parsedDays[Calendar.MONDAY-1] = true;
-                    break;
-                case "TUE ":
-                    parsedDays[Calendar.TUESDAY-1] = true;
-                    break;
-                case "WED ":
-                    parsedDays[Calendar.WEDNESDAY-1] = true;
-                    break;
-                case "THU ":
-                    parsedDays[Calendar.THURSDAY-1] = true;
-                    break;
-                case "FRI ":
-                    parsedDays[Calendar.FRIDAY-1] = true;
-                    break;
-                case "SAT ":
-                    parsedDays[Calendar.SATURDAY-1] = true;
-                    break;
-                case "SUN ":
-                    parsedDays[Calendar.SUNDAY-1] = true;
-                    break;
+        String[] repeatDays = days.split(" ");
+        for (int i = 0; i < repeatDays.length; i++) {
+            if (repeatDays[i].equals("MON")) {
+                parsedDays[Calendar.MONDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("TUE")){
+                parsedDays[Calendar.TUESDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("WED")){
+                parsedDays[Calendar.WEDNESDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("THU")){
+                parsedDays[Calendar.THURSDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("FRI")){
+                parsedDays[Calendar.FRIDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("SAT")){
+                parsedDays[Calendar.SATURDAY - 1] = true;
+                continue;
+            }
+            if (repeatDays[i].equals("SUN")){
+                parsedDays[Calendar.SUNDAY - 1] = true;
+                continue;
             }
         }
 

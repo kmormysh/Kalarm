@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/button_material_dark"
+    android:orientation="vertical"
+    android:theme="@android:style/Theme.Holo">
+
+    <EditText
+        android:id="@+id/alarm_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="New Alarm"
+        android:textSize="20sp"
+        android:layout_margin="5sp"/>
+
+    <TimePicker
+        android:id="@+id/alarm_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="12:00"
+        android:textSize="20sp" />
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/btns_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/btn_mon"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="MON"
+            android:textOn="MON"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_tue"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="TUE"
+            android:textOn="TUE"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_wed"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="WED"
+            android:textOn="WED"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/btns_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/btn_thu"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="THU"
+            android:textOn="THU"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_fri"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="FRI"
+            android:textOn="FRI"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_sat"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="SAN"
+            android:textOn="SAN"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/btn_sun"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textOff="SUN"
+            android:textOn="SUN"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_save"
+        style="@style/ThemeOverlay.AppCompat.Dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+
+</LinearLayout>

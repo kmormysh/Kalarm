@@ -56,7 +56,7 @@ public class AlarmPopUpScreen extends Activity {
         snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 mPlayer.stop();
             }
         });
