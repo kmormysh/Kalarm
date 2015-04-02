@@ -100,20 +100,20 @@ public class Alarm {
 
     public static String parseDaysIntToString(boolean[] days) {
         String parsedDays = "";
-        if (days[Calendar.MONDAY - 1])
+        if (days[0])
             parsedDays += "MON ";
-        if (days[Calendar.TUESDAY - 1])
+        if (days[1])
             parsedDays += "TUE ";
-        if (days[Calendar.WEDNESDAY - 1])
+        if (days[2])
             parsedDays += "WED ";
-        if (days[Calendar.THURSDAY - 1])
+        if (days[3])
             parsedDays += "THU ";
-        if (days[Calendar.FRIDAY - 1])
+        if (days[4])
             parsedDays += "FRI ";
-        if (days[Calendar.SATURDAY - 1])
+        if (days[5])
             parsedDays += "SAT ";
-        if (days[Calendar.SUNDAY - 1])
-            parsedDays += "SUN";
+        if (days[6])
+            parsedDays += "SUN ";
 
         return parsedDays;
     }
@@ -124,31 +124,31 @@ public class Alarm {
         String[] repeatDays = days.split(" ");
         for (int i = 0; i < repeatDays.length; i++) {
             if (repeatDays[i].equals("MON")) {
-                parsedDays[Calendar.MONDAY - 1] = true;
+                parsedDays[0] = true;
                 continue;
             }
             if (repeatDays[i].equals("TUE")){
-                parsedDays[Calendar.TUESDAY - 1] = true;
+                parsedDays[1] = true;
                 continue;
             }
             if (repeatDays[i].equals("WED")){
-                parsedDays[Calendar.WEDNESDAY - 1] = true;
+                parsedDays[2] = true;
                 continue;
             }
             if (repeatDays[i].equals("THU")){
-                parsedDays[Calendar.THURSDAY - 1] = true;
+                parsedDays[3] = true;
                 continue;
             }
             if (repeatDays[i].equals("FRI")){
-                parsedDays[Calendar.FRIDAY - 1] = true;
+                parsedDays[4] = true;
                 continue;
             }
             if (repeatDays[i].equals("SAT")){
-                parsedDays[Calendar.SATURDAY - 1] = true;
+                parsedDays[5] = true;
                 continue;
             }
             if (repeatDays[i].equals("SUN")){
-                parsedDays[Calendar.SUNDAY - 1] = true;
+                parsedDays[6] = true;
                 continue;
             }
         }

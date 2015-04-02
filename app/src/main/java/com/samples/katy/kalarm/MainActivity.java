@@ -19,7 +19,7 @@ import android.widget.ListView;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements DialogInterface.OnDismissListener {
+public class MainActivity extends ActionBarActivity implements DialogInterface.OnDismissListener  {
 
     private AlarmDatabaseHandler alarmDatabaseHandler;
     private AlarmManagerReceiver alarmManagerReceiver;
@@ -27,8 +27,6 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
     private ListView alarmList;
     private Button btn_setAlarm;
     private List<Alarm> alarms;
-    private Activity mainActivity;
-    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +34,6 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
 
 
         setContentView(R.layout.activity_main);
-
-        mainActivity = this;
-        context = this;
 
         alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
 //        alarmDatabaseHandler.deleteAll();
@@ -100,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
             alarmDetails.show(ft, "dialog");
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
-            alarmManagerReceiver.cancelAlarm(context);
+            alarmManagerReceiver.cancelAlarm(this);
             alarmDatabaseHandler.deleteAlarm(alarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();

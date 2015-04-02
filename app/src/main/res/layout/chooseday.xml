@@ -9,14 +9,12 @@
     android:theme="@android:style/Theme.Holo"
     android:background="@color/button_material_dark">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/btns_1"
+    <LinearLayout
+        android:id="@+id/days_first_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5sp"
         android:orientation="horizontal">
-
 
         <ToggleButton
             android:id="@+id/btn_mon"
@@ -49,8 +47,8 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/btns_2"
+    <LinearLayout
+        android:id="@+id/days_second_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -108,7 +106,7 @@
         android:id="@+id/btn_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set Alarm"
+        android:text="@string/set_alarm"
         style="@style/ThemeOverlay.AppCompat.Dark"/>
 
 </LinearLayout>

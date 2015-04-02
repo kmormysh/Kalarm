@@ -11,23 +11,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="5sp"
         android:gravity="center"
         android:singleLine="true"
-        android:text="New Alarm"
-        android:textSize="20sp"
-        android:layout_margin="5sp"/>
+        android:textSize="20sp" />
 
     <TimePicker
         android:id="@+id/alarm_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="12:00"
         android:textSize="20sp" />
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/btns_1"
+    <LinearLayout
+        android:id="@+id/days_first_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5sp"
@@ -64,8 +62,8 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/btns_2"
+    <LinearLayout
+        android:id="@+id/days_second_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -117,7 +115,6 @@
         style="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
-
+        android:text="@string/save" />
 
 </LinearLayout>

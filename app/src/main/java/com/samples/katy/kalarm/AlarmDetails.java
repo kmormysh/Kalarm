@@ -36,7 +36,7 @@ public class AlarmDetails extends DialogFragment implements AdapterView.OnItemCl
 
     private boolean[] repeatDays = new boolean[7];
 
-    static AlarmDetails newInstance(int id){
+    static AlarmDetails newInstance(int id) {
         AlarmDetails alarmDetails = new AlarmDetails();
         Bundle arg = new Bundle();
         arg.putInt(Alarm.ID, id);
@@ -54,31 +54,18 @@ public class AlarmDetails extends DialogFragment implements AdapterView.OnItemCl
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.alarm_details_pop_up, container);
 
-        LinearLayout buttons = (LinearLayout) view.findViewById(R.id.btns_1);
-        for (int i = 0; i < buttons.getChildCount(); i++){
-            View v = buttons.getChildAt(i);
-            if (v instanceof ToggleButton) {
-                v.setOnClickListener(this);
-                daysOfWeek.add((ToggleButton) v);
+        int tag = 0;
+        List<View> subviews = ViewTreeHelper.getAllSubviews(view);
+        for (int i = 0; i < subviews.size(); i++) {
+            if (subviews.get(i) instanceof ToggleButton) {
+                subviews.get(i).setOnClickListener(this);
+                subviews.get(i).setTag(tag++);
+                daysOfWeek.add((ToggleButton) subviews.get(i));
             }
         }
 
-        buttons = (LinearLayout) view.findViewById(R.id.btns_2);
-        for (int i = 0; i < buttons.getChildCount(); i++){
-            View v = buttons.getChildAt(i);
-            if (v instanceof ToggleButton) {
-                v.setOnClickListener(this);
-                daysOfWeek.add((ToggleButton) v);
-            }
-        }
-
-        daysOfWeek.get(0).setChecked(alarm.getDays()[Calendar.MONDAY - 1]);
-        daysOfWeek.get(1).setChecked(alarm.getDays()[Calendar.TUESDAY - 1]);
-        daysOfWeek.get(2).setChecked(alarm.getDays()[Calendar.WEDNESDAY - 1]);
-        daysOfWeek.get(3).setChecked(alarm.getDays()[Calendar.THURSDAY - 1]);
-        daysOfWeek.get(4).setChecked(alarm.getDays()[Calendar.FRIDAY - 1]);
-        daysOfWeek.get(5).setChecked(alarm.getDays()[Calendar.SATURDAY - 1]);
-        daysOfWeek.get(6).setChecked(alarm.getDays()[Calendar.SUNDAY - 1]);
+        for (int i = 0; i < 7; i++)
+            daysOfWeek.get(i).setChecked(alarm.getDays()[i]);
 
         alarm_name = (EditText) view.findViewById(R.id.alarm_name);
         alarm_name.setText(alarm.getAlarm_name());
@@ -93,7 +80,7 @@ public class AlarmDetails extends DialogFragment implements AdapterView.OnItemCl
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                alarm.setAlarm_time(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+                alarm.setAlarm_time(String.format("%02d:%02d", hourOfDay, minute));
             }
         });
 
@@ -124,38 +111,20 @@ public class AlarmDetails extends DialogFragment implements AdapterView.OnItemCl
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()) {
-            case R.id.btn_mon:
-                repeatDays[Calendar.MONDAY - 1] = daysOfWeek.get(0).isChecked();
-                break;
-            case R.id.btn_tue:
-                repeatDays[Calendar.TUESDAY - 1] = daysOfWeek.get(1).isChecked();
-                break;
-            case R.id.btn_wed:
-                repeatDays[Calendar.WEDNESDAY - 1] = daysOfWeek.get(2).isChecked();
-                break;
-            case R.id.btn_thu:
-                repeatDays[Calendar.THURSDAY - 1] = daysOfWeek.get(3).isChecked();
-                break;
-            case R.id.btn_fri:
-                repeatDays[Calendar.FRIDAY - 1] = daysOfWeek.get(4).isChecked();
-                break;
-            case R.id.btn_sat:
-                repeatDays[Calendar.SATURDAY - 1] = daysOfWeek.get(5).isChecked();
-                break;
-            case R.id.btn_sun:
-                repeatDays[Calendar.SUNDAY - 1] = daysOfWeek.get(6).isChecked();
-                break;
-            case R.id.btn_save:
-                alarm.setDays(repeatDays);
-                alarm.setAlarm_name(alarm_name.getText().toString());
-                if (alarm.checkSelectedDays()) {
-                    updateAlarm(alarm);
-                    dismiss();
-                    break;
-                }
+        Object tag = v.getTag();
+        if (tag instanceof Integer) {
+            Integer index = (Integer) tag;
+            repeatDays[index] = daysOfWeek.get(index).isChecked();
+        } else if (v.getId() == R.id.btn_save) {
+            alarm.setDays(repeatDays);
+            alarm.setAlarm_name(alarm_name.getText().toString());
+            if (alarm.checkSelectedDays()) {
+                updateAlarm(alarm);
+                dismiss();
+            }
         }
     }
+
 
     @Override
     public void onDismiss(final DialogInterface dialog) {

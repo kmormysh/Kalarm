@@ -8,5 +8,7 @@
         <item>Details</item>
         <item>Delete</item>
     </string-array>
+    <string name="save">Save</string>
+    <string name="set_alarm">Set Alarm</string>
 
 </resources>
