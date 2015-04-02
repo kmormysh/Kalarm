@@ -155,4 +155,11 @@ public class Alarm {
 
         return parsedDays;
     }
+
+    public boolean checkSelectedDays(){
+        for (int i = 0; i < 7; i++)
+            if (days[i])
+                return true;
+        return false;
+    }
 }

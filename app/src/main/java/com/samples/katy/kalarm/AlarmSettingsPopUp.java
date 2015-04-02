@@ -59,7 +59,7 @@ public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.On
         TimePicker timePicker = (TimePicker) view.findViewById(R.id.timePicker);
         timePicker.setOnTimeChangedListener(this);
 
-        time = timePicker.getCurrentHour().toString() + ":" + timePicker.getCurrentMinute().toString();
+        time = padding_str(timePicker.getCurrentHour()) + ":" + padding_str(timePicker.getCurrentMinute());
 
         return view;
     }
@@ -134,11 +134,14 @@ public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.On
                 break;
             case R.id.btn_create:
                 Alarm newAlarm = new Alarm(time, "New Alarm", repeatDays, true, false);
-                setAlarm(newAlarm);
-                AlarmAdapter.getAlarmList();
-                MainActivity.alarmAdapter.notifyDataSetChanged();
-                dismiss();
-                break;
+                if (newAlarm.checkSelectedDays()) {
+                    setAlarm(newAlarm);
+                    AlarmAdapter.getAlarmList();
+                    MainActivity.alarmAdapter.notifyDataSetChanged();
+                    dismiss();
+                    break;
+                }
+
         }
     }
 

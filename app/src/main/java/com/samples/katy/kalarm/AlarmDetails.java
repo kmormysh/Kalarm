@@ -178,11 +178,13 @@ public class AlarmDetails extends DialogFragment implements AdapterView.OnItemCl
             case R.id.btn_save:
                 alarm.setDays(repeatDays);
                 alarm.setAlarm_name(alarm_name.getText().toString());
-                updateAlarm(alarm);
-                AlarmAdapter.getAlarmList();
-                MainActivity.alarmAdapter.notifyDataSetChanged();
-                dismiss();
-                break;
+                if (alarm.checkSelectedDays()) {
+                    updateAlarm(alarm);
+                    AlarmAdapter.getAlarmList();
+                    MainActivity.alarmAdapter.notifyDataSetChanged();
+                    dismiss();
+                    break;
+                }
         }
     }
 
