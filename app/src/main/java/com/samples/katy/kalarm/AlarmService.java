@@ -9,8 +9,6 @@ import android.os.IBinder;
  */
 public class AlarmService extends Service {
 
-    public static String TAG = AlarmService.class.getSimpleName();
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;

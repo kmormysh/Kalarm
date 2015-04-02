@@ -16,7 +16,6 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
     final public static String TIME = "time";
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
         setAlarms(context);

@@ -16,13 +16,15 @@ import java.util.List;
  */
 public class AlarmAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
-    private static List<Alarm> alarmList;
+    private List<Alarm> alarmList;
     private AlarmDatabaseHandler alarmDatabaseHandler;
+    private AlarmManagerReceiver alarmManagerReceiver;
 
     public AlarmAdapter(Context context, List<Alarm> alarmList) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.alarmList = alarmList;
         alarmDatabaseHandler = new AlarmDatabaseHandler(context);
+        alarmManagerReceiver = new AlarmManagerReceiver();
     }
 
 
@@ -49,8 +51,8 @@ public class AlarmAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         final Alarm alarm = getAlarm(position);
-
         final int pos = position;
+        final Context context = parent.getContext();
 
         if (view == null)
             view = layoutInflater.inflate(R.layout.alarm_row, parent, false);
@@ -63,15 +65,9 @@ public class AlarmAdapter extends BaseAdapter {
                 getAlarmList();
                 Alarm newAlarm = getAlarm(pos);
 
-                if (alarmSwitch.isChecked()) { //On
-                    newAlarm.setEnable(true);
-                    alarmDatabaseHandler.updateAlarm(newAlarm);
-                    MainActivity.alarmManagerReceiver.setAlarms(MainActivity.context);
-                } else { //Off
-                    newAlarm.setEnable(false);
-                    alarmDatabaseHandler.updateAlarm(newAlarm);
-                    MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
-                }
+                newAlarm.setEnable(alarmSwitch.isChecked());
+                alarmDatabaseHandler.updateAlarm(newAlarm);
+                alarmManagerReceiver.setAlarms(context);
 
                 notifyDataSetChanged();
             }

@@ -23,10 +23,9 @@ import java.util.List;
  */
 public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener, TimePicker.OnTimeChangedListener {
 
-    String days;
-    String time;
-    boolean[] repeatDays = new boolean[7];
-    Button btn_create;
+    private String time;
+    private boolean[] repeatDays = new boolean[7];
+    private Button btn_create;
     private List<ToggleButton> daysOfWeek = new ArrayList<>();
     private AlarmDatabaseHandler alarmDatabaseHandler;
 
@@ -53,8 +52,6 @@ public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.On
                 daysOfWeek.add((ToggleButton) v);
             }
         }
-
-        days = "";
 
         btn_create = (Button) view.findViewById(R.id.btn_create);
         btn_create.setOnClickListener(this);
@@ -113,7 +110,6 @@ public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.On
                 if (newAlarm.checkSelectedDays()) {
                     setAlarm(newAlarm);
                     dismiss();
-
                     break;
                 }
         }

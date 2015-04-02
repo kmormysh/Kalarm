@@ -29,8 +29,8 @@ import java.util.List;
 public class AlarmDetails extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private Alarm alarm;
-    EditText alarm_name;
-    Button btn_save;
+    private EditText alarm_name;
+    private Button btn_save;
     private AlarmDatabaseHandler alarmDatabaseHandler;
     private List<ToggleButton> daysOfWeek = new ArrayList<>();
 

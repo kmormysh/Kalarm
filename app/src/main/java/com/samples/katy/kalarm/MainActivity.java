@@ -22,13 +22,13 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity implements DialogInterface.OnDismissListener {
 
     private AlarmDatabaseHandler alarmDatabaseHandler;
-    public static AlarmManagerReceiver alarmManagerReceiver;
-    public static AlarmAdapter alarmAdapter;
+    private AlarmManagerReceiver alarmManagerReceiver;
+    private AlarmAdapter alarmAdapter;
     private ListView alarmList;
     private Button btn_setAlarm;
-    public static List<Alarm> alarms;
-    public static Activity mainActivity;
-    public static Context context;
+    private List<Alarm> alarms;
+    private Activity mainActivity;
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
             alarmDetails.show(ft, "dialog");
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
-            alarmManagerReceiver.cancelAlarm(MainActivity.context);
+            alarmManagerReceiver.cancelAlarm(context);
             alarmDatabaseHandler.deleteAlarm(alarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();

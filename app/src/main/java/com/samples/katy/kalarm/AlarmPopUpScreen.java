@@ -19,7 +19,7 @@ import android.os.Handler;
  */
 public class AlarmPopUpScreen extends Activity {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private PowerManager.WakeLock mWakeLock;
     private MediaPlayer mPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
