@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -56,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         alarms = alarmDatabaseHandler.getAllAlarms();
 
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms);
-//        alarmAdapter = new AlarmAdapter(this, R.layout.alarm_row, alarms);
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
@@ -69,18 +67,18 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == R.id.alarm_list) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             String[] menuItems = getResources().getStringArray(R.array.menu);
-            for (int i = 0; i<menuItems.length; i++) {
+            for (int i = 0; i < menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }
-//            super.onCreateContextMenu(menu, v, menuInfo);
         }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        alarms = alarmDatabaseHandler.getAllAlarms();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
         String[] menuItems = getResources().getStringArray(R.array.menu);
         String menuItemName = menuItems[menuItemIndex];
@@ -105,8 +103,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return true;
-
-//        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -115,23 +111,5 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-//    public void cancelRepeatingTimer(View view){
-//
-//        Switch alarmSwitch = (Switch) view.findViewById(R.id.on_off_switch);
-//        Context context = this.getApplicationContext();
-//        if (alarmSwitch.isChecked()) { //On
-//            alarmManagerReceiver.setAlarms(context);
-//        }
-//        else { //Off
-//
-//            Alarm alarm = alarmDatabaseHandler.getAlarm(1);
-//
-//            alarm.setEnable(0);
-//            alarmDatabaseHandler.updateAlarm(alarm);
-//
-//            alarmManagerReceiver.cancelAlarm(context);
-//            Toast.makeText(context, "Alarm is off", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }

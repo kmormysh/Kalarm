@@ -75,21 +75,6 @@ public class AlarmAdapter extends BaseAdapter {
             }
         });
 
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                getAlarmList();
-//                Alarm newAlarm = getAlarm(pos);
-//                MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
-//                MainActivity.alarmDatabaseHandler.deleteAlarm(newAlarm);
-//                getAlarmList();
-//
-//                notifyDataSetChanged();
-//                return false;
-//            }
-//        });
-
-
         TextView alarm_time = (TextView) view.findViewById(R.id.alarm_time);
         TextView alarm_name = (TextView) view.findViewById(R.id.alarm_name);
         TextView alarm_days = (TextView) view.findViewById(R.id.alarm_days);

@@ -18,7 +18,6 @@ import java.util.Calendar;
  */
 public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener, TimePicker.OnTimeChangedListener {
 
-    private Alarm alarm;
     String days;
     String time;
     boolean[] repeatDays = new boolean[7];
@@ -74,10 +73,6 @@ public class AlarmSettingsPopUp extends DialogFragment implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
         dismiss();
-    }
-
-    public Alarm getAlarm() {
-        return alarm;
     }
 
     public void setAlarm(Alarm alarm) {

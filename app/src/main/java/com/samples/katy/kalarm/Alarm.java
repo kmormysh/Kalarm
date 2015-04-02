@@ -16,9 +16,6 @@ public class Alarm {
     private boolean enable;
     private boolean[] days = new boolean[7];
 
-    public static final String DAYS = "days";
-    public static final String TIME = "time";
-    public static final String NAME = "name";
     public static final String ID = "id";
 
     public Alarm() {

@@ -14,11 +14,6 @@ import java.util.List;
  */
 public class AlarmManagerReceiver extends BroadcastReceiver {
 
-    final public static String ONE_TIME = "onetime";
-    final public static String ID = "id";
-    final public static String NAME = "name";
-    final public static String TIME_HOUR = "timeHour";
-    final public static String TIME_MINUTE = "timeMinute";
     final public static String TIME = "time";
 
 
