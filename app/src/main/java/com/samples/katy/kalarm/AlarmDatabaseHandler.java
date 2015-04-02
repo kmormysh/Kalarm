@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Katy on 3/5/2015.
  */
-public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandler {
+public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "alarmManager";
@@ -37,8 +37,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         return cursor.moveToNext();
     }
 
-
-    @Override
     public void addAlarm(Alarm alarm) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -54,7 +52,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         db.close();
     }
 
-    @Override
     public Alarm getAlarm(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -76,7 +73,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         return alarm;
     }
 
-    @Override
     public List<Alarm> getAllAlarms() {
         List<Alarm> alarmList = new ArrayList<Alarm>();
         String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
@@ -103,7 +99,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         return alarmList;
     }
 
-    @Override
     public int getAlarmCount() {
         String countQuery = "SELECT  * FROM " + TABLE_ALARMS;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -113,7 +108,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         return cursor.getCount();
     }
 
-    @Override
     public int updateAlarm(Alarm alarm) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -129,7 +123,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
                 new String[]{String.valueOf(alarm.getId())});
     }
 
-    @Override
     public void deleteAlarm(Alarm alarm) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ALARMS, KEY_ID + " = ?", new String[]{String.valueOf(alarm.getId())});
@@ -137,7 +130,6 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper implements IDatabaseH
         db.close();
     }
 
-    @Override
     public void deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ALARMS, null, null);

@@ -17,10 +17,12 @@ import java.util.List;
 public class AlarmAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private static List<Alarm> alarmList;
+    private AlarmDatabaseHandler alarmDatabaseHandler;
 
     public AlarmAdapter(Context context, List<Alarm> alarmList) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.alarmList = alarmList;
+        alarmDatabaseHandler = new AlarmDatabaseHandler(context);
     }
 
 
@@ -63,11 +65,11 @@ public class AlarmAdapter extends BaseAdapter {
 
                 if (alarmSwitch.isChecked()) { //On
                     newAlarm.setEnable(true);
-                    MainActivity.alarmDatabaseHandler.updateAlarm(newAlarm);
+                    alarmDatabaseHandler.updateAlarm(newAlarm);
                     MainActivity.alarmManagerReceiver.setAlarms(MainActivity.context);
                 } else { //Off
                     newAlarm.setEnable(false);
-                    MainActivity.alarmDatabaseHandler.updateAlarm(newAlarm);
+                    alarmDatabaseHandler.updateAlarm(newAlarm);
                     MainActivity.alarmManagerReceiver.cancelAlarm(MainActivity.context);
                 }
 
@@ -90,7 +92,7 @@ public class AlarmAdapter extends BaseAdapter {
         return view;
     }
 
-    public static void getAlarmList () {
-        alarmList = MainActivity.alarmDatabaseHandler.getAllAlarms();
+    public void getAlarmList () {
+        alarmList = alarmDatabaseHandler.getAllAlarms();
     }
 }

@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -18,9 +19,9 @@ import android.widget.ListView;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements DialogInterface.OnDismissListener {
 
-    public static AlarmDatabaseHandler alarmDatabaseHandler;
+    private AlarmDatabaseHandler alarmDatabaseHandler;
     public static AlarmManagerReceiver alarmManagerReceiver;
     public static AlarmAdapter alarmAdapter;
     private ListView alarmList;
@@ -49,8 +50,11 @@ public class MainActivity extends ActionBarActivity {
 
                 AlarmSettingsPopUp dialog = new AlarmSettingsPopUp();
                 dialog.show(getFragmentManager(), "Choose day of the week");
+                alarmList.invalidate();
             }
+
         });
+
 
         alarms = alarmDatabaseHandler.getAllAlarms();
 
@@ -98,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManagerReceiver.cancelAlarm(MainActivity.context);
             alarmDatabaseHandler.deleteAlarm(alarm);
-            AlarmAdapter.getAlarmList();
+            alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
 
@@ -111,5 +115,9 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        alarmAdapter.getAlarmList();
+        alarmAdapter.notifyDataSetChanged();
+    }
 }
