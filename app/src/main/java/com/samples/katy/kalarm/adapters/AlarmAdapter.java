@@ -68,7 +68,7 @@ public class AlarmAdapter extends BaseAdapter {
                 getAlarmList();
                 Alarm newAlarm = getAlarm(pos);
 
-                newAlarm.setEnabled(alarmSwitch.isChecked());
+                newAlarm.setIsEnabled(alarmSwitch.isChecked());
                 alarmDatabaseHandler.updateAlarm(newAlarm);
                 alarmManagerReceiver.setAlarms(context);
 
@@ -80,7 +80,7 @@ public class AlarmAdapter extends BaseAdapter {
         TextView alarm_name = (TextView) view.findViewById(R.id.alarm_name);
         TextView alarm_days = (TextView) view.findViewById(R.id.alarm_days);
 
-        alarmSwitch.setChecked(alarm.getEnabled());
+        alarmSwitch.setChecked(alarm.getIsEnabled());
         alarm_time.setText(String.format("%02d:%02d", alarm.getAlarmHours(), alarm.getAlarmMinutes()));
         alarm_name.setText(alarm.getAlarmName());
 

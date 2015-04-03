@@ -39,8 +39,6 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
         alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
 
-        deleteDatabase("alarmManager");
-
         Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
         button_setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +113,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
     @Override
     public void onCloseCreate(boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
-        Alarm newAlarm = new Alarm(hours, minutes, name, days, isRepeat, false);
+        Alarm newAlarm = new Alarm(0, hours, minutes, name, days, isRepeat, false);
         if (newAlarm.isAtLeastOneDaySelected()) {
             alarmDatabaseHandler.addAlarm(newAlarm);
             alarmAdapter.getAlarmList();

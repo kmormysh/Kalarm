@@ -28,7 +28,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         List<Alarm> alarms = alarmDatabaseHandler.getAllAlarms();
 
         for (Alarm alarm : alarms) {
-            if (alarm.getEnabled()) { //is On
+            if (alarm.getIsEnabled()) { //is On
                 PendingIntent pendingIntent = createPendingIntent(context, alarm);
 
                 Calendar calendar = Calendar.getInstance();
@@ -106,7 +106,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
         if (alarms != null) {
             for (Alarm alarm : alarms) {
-                if (alarm.getEnabled()) {
+                if (alarm.getIsEnabled()) {
                     PendingIntent pIntent = createPendingIntent(context, alarm);
 
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

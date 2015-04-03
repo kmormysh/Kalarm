@@ -42,11 +42,11 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, alarm.getAlarmName());
-        values.put(KEY_DAY, alarm.convertDaysIntToString(alarm.getDays()));
+        values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
         values.put(KEY_HOURS, alarm.getAlarmHours());
         values.put(KET_MINUTES, alarm.getAlarmMinutes());
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
-        values.put(KEY_ENABLE, alarm.getEnabled() ? 1:0);
+        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1:0);
 
         db.insert(TABLE_ALARMS, null, values);
 
@@ -70,7 +70,7 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
                                 cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
                                 cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
                                 cursor.getString(cursor.getColumnIndex(KEY_NAME)),
-                                Alarm.convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+                                convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
                                 cursor.getInt(cursor.getColumnIndex(KEY_REPEAT))>0,
                                 cursor.getInt(cursor.getColumnIndex(KEY_ENABLE))>0);
 
@@ -90,11 +90,11 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
                 Alarm alarm = new Alarm();
                 alarm.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
                 alarm.setAlarmName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-                alarm.setDays(alarm.convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))));
+                alarm.setDays(convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))));
                 alarm.setAlarmHours(cursor.getInt(cursor.getColumnIndex(KEY_HOURS)));
                 alarm.setAlarmMinutes(cursor.getInt(cursor.getColumnIndex(KET_MINUTES)));
                 alarm.setRepeatedWeekly(cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0);
-                alarm.setEnabled(cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
+                alarm.setIsEnabled(cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
 
                 alarmList.add(alarm);
             } while (cursor.moveToNext());
@@ -118,11 +118,11 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_ID, alarm.getId());
         values.put(KEY_NAME, alarm.getAlarmName());
-        values.put(KEY_DAY, alarm.convertDaysIntToString(alarm.getDays()));
+        values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
         values.put(KEY_HOURS, alarm.getAlarmHours());
         values.put(KET_MINUTES, alarm.getAlarmMinutes());
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
-        values.put(KEY_ENABLE, alarm.getEnabled() ? 1:0);
+        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1:0);
 
         return db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(alarm.getId())});
@@ -157,5 +157,28 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALARMS);
         onCreate(db);
+    }
+
+    private boolean[] convertDaysStringToInt(String days) {
+
+        boolean[] parsedDays = new boolean[Alarm.DAYS_PER_WEEK];
+        String[] repeatDays = days.split(" ");
+        for (int i = 0; i < repeatDays.length; i++) {
+            int index = Integer.parseInt(repeatDays[i]);
+            parsedDays[index] = true;
+        }
+
+        return parsedDays;
+    }
+
+    private String convertDaysIntToString(boolean[] days) {
+        String parsedDays = "";
+        for (int i = 0; i < days.length; i++) {
+            if (days[i]) {
+                parsedDays += i + " ";
+            }
+        }
+
+        return parsedDays;
     }
 }
