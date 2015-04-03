@@ -1,10 +1,12 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.samples.katy.kalarm.models.Alarm;
 
 import java.util.Calendar;
 import java.util.List;
@@ -25,12 +27,12 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         List<Alarm> alarms = alarmDatabaseHandler.getAllAlarms();
 
         for (Alarm alarm : alarms) {
-            if (alarm.getEnable()) { //is On
+            if (alarm.getEnabled()) { //is On
                 PendingIntent pendingIntent = createPendingIntent(context, alarm);
 
                 Calendar calendar = Calendar.getInstance();
-                int hours = Integer.parseInt(alarm.getAlarm_time().substring(0, 2));
-                int minutes = Integer.parseInt(alarm.getAlarm_time().substring(3, 5));
+                int hours = alarm.getHours();
+                int minutes = alarm.getMinutes();
 
                 calendar.set(Calendar.HOUR_OF_DAY, hours);
                 calendar.set(Calendar.MINUTE, minutes);
@@ -62,7 +64,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
                     for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; ++dayOfWeek) {
                         if (alarm.getDays()[dayOfWeek - 1]
                                 && dayOfWeek <= nowDay
-                                && alarm.getRepeat_weekly()) {
+                                && alarm.getRepeatedWeekly()) {
                             calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
                             calendar.add(Calendar.WEEK_OF_YEAR, 1);
 
@@ -90,7 +92,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
     private static PendingIntent createPendingIntent(Context context, Alarm alarm) {
         Intent intent = new Intent(context, AlarmService.class);
-        intent.putExtra(TIME, alarm.getAlarm_time());
+        intent.putExtra(TIME, alarm.getAlarmTime());
 
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -102,7 +104,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
         if (alarms != null) {
             for (Alarm alarm : alarms) {
-                if (alarm.getEnable()) {
+                if (alarm.getEnabled()) {
                     PendingIntent pIntent = createPendingIntent(context, alarm);
 
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

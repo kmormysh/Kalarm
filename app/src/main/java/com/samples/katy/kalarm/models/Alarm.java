@@ -1,92 +1,84 @@
-package com.samples.katy.kalarm;
-
-import java.util.Calendar;
-
-/**
- * Created by Katy on 3/17/2015.
- */
+package com.samples.katy.kalarm.models;
 
 public class Alarm {
 
-    private int id;
-    private String alarm_time;
-    private String alarm_name;
-    private String alarm_days;
-    private boolean repeat_weekly;
-    private boolean enable;
+    private int alarmId;
+    private String alarmTime;
+    private String alarmName;
+    private String alarmDays;
+    private boolean isRepeatedWeekly;
+    private boolean isEnabled;
     private boolean[] days = new boolean[7];
-
-    public static final String ID = "id";
 
     public Alarm() {
     }
 
     // create custom alarm
-    public Alarm(String alarm_time, String alarm_name, boolean[] days,
-                 boolean repeat_weekly, boolean enable) {
-        this.alarm_time = alarm_time;
-        this.alarm_name = alarm_name;
+    public Alarm(String alarmTime, String alarmName, boolean[] days,
+                 boolean isRepeatedWeekly, boolean isEnabled) {
+        this.alarmTime = alarmTime;
+        this.alarmName = alarmName;
         this.days = days;
-        this.alarm_days = parseDaysIntToString(days);
-        this.repeat_weekly = repeat_weekly;
-        this.enable = enable;
+        this.alarmDays = parseDaysIntToString(days);
+        this.isRepeatedWeekly = isRepeatedWeekly;
+        this.isEnabled = isEnabled;
     }
 
     // read from DB
-    public Alarm(int id, String alarm_time, String alarm_name, String alarm_days,
-                 boolean repeat_weekly, boolean enable) {
-        this(alarm_time, alarm_name, new boolean[7], repeat_weekly, enable);
-        this.id = id;
-        this.alarm_days = alarm_days;
-        this.days = parseDaysStringToInt(alarm_days);
+    public Alarm(int alarmId, String alarmTime, String alarmName, String alarmDays,
+                 boolean isRepeatedWeekly, boolean isEnabled) {
+        this(alarmTime, alarmName, new boolean[7], isRepeatedWeekly, isEnabled);
+        this.alarmId = alarmId;
+        this.alarmDays = alarmDays;
+        this.days = parseDaysStringToInt(alarmDays);
     }
 
-    public String getAlarm_time() {
-        return alarm_time;
+    public String getAlarmTime() {
+        return alarmTime;
     }
 
-    public void setAlarm_time(String time) {
-        this.alarm_time = time;
+    public void setAlarmTime(String time) {
+        this.alarmTime = time;
     }
 
-    public String getAlarm_name() {
-        return alarm_name;
+    public String getAlarmName() {
+        return alarmName;
     }
 
-    public void setAlarm_name(String alarm_name) {
-        this.alarm_name = alarm_name;
+    public void setAlarmName(String alarmName) {
+        this.alarmName = alarmName;
     }
 
-    public String getAlarm_day() {
-        return alarm_days;
+    public String getAlarmDays() {
+        return alarmDays;
     }
 
-    public void setAlarm_day(String alarm_day) {
-        this.alarm_days = alarm_day;
+    public void setAlarmDays(String alarm_day) {
+        this.alarmDays = alarm_day;
     }
 
     public int getId() {
-        return id;
+        return alarmId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int alarmId) {
+        this.alarmId = alarmId;
     }
 
-    public boolean getRepeat_weekly() {
-        return repeat_weekly;
+    public boolean getRepeatedWeekly() {
+        return isRepeatedWeekly;
     }
 
-    public void setRepeat_weekly(boolean repeat_weekly) {
-        this.repeat_weekly = repeat_weekly;
+    public void setRepeatedWeekly(boolean repeatedWeekly) {
+        this.isRepeatedWeekly = repeatedWeekly;
     }
 
-    public boolean getEnable() {
-        return enable;
+    public boolean getEnabled() {
+        return isEnabled;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
     public boolean[] getDays() {
@@ -95,7 +87,7 @@ public class Alarm {
 
     public void setDays(boolean[] days) {
         this.days = days;
-        setAlarm_day(parseDaysIntToString(days));
+        setAlarmDays(parseDaysIntToString(days));
     }
 
     public static String parseDaysIntToString(boolean[] days) {
@@ -156,10 +148,19 @@ public class Alarm {
         return parsedDays;
     }
 
-    public boolean checkSelectedDays(){
+    public boolean isAtLeastOneDaySelected(){
         for (int i = 0; i < 7; i++)
             if (days[i])
                 return true;
         return false;
     }
+
+    public int getHours(){
+        return Integer.parseInt((getAlarmTime().split(":"))[0]);
+    }
+
+    public int getMinutes(){
+        return Integer.parseInt((getAlarmTime().split(":"))[1]);
+    }
+
 }

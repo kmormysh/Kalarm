@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.utils;
 
 import android.view.View;
 import android.view.ViewGroup;

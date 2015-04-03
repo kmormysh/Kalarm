@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Handler;
+
+import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
+import com.samples.katy.kalarm.R;
 
 public class AlarmWakeUpActivity extends Activity {
 

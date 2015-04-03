@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.dialogfragments;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -7,17 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.intefraces.DialogCloseListener;
+import com.samples.katy.kalarm.R;
+import com.samples.katy.kalarm.utils.ViewTreeHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetAlarmDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener,
-        View.OnClickListener {
+public class AlarmSetupDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private Alarm alarm;
     private List<ToggleButton> daysOfWeek = new ArrayList<>();
@@ -48,13 +51,13 @@ public class SetAlarmDialogFragment extends DialogFragment implements AdapterVie
         timePicker = (TimePicker) view.findViewById(R.id.timePicker);
 
         if (alarm != null) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < daysOfWeek.size(); i++) {
                 daysOfWeek.get(i).setChecked(alarm.getDays()[i]);
             }
-            alarm_name.setText(alarm.getAlarm_name());
+            alarm_name.setText(alarm.getAlarmName());
 
-            timePicker.setCurrentHour(Integer.parseInt(alarm.getAlarm_time().substring(0, 2)));
-            timePicker.setCurrentMinute(Integer.parseInt(alarm.getAlarm_time().substring(3, 5)));
+            timePicker.setCurrentHour(alarm.getHours());
+            timePicker.setCurrentMinute(alarm.getMinutes());
         }
 
         return view;
@@ -63,12 +66,6 @@ public class SetAlarmDialogFragment extends DialogFragment implements AdapterVie
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-        dismiss();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,11 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.utils.AlarmDatabaseHandler;
+import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
+import com.samples.katy.kalarm.R;
+
 import java.util.List;
 
-/**
- * Created by Katy on 3/17/2015.
- */
 public class AlarmAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<Alarm> alarmList;
@@ -65,7 +67,7 @@ public class AlarmAdapter extends BaseAdapter {
                 getAlarmList();
                 Alarm newAlarm = getAlarm(pos);
 
-                newAlarm.setEnable(alarmSwitch.isChecked());
+                newAlarm.setEnabled(alarmSwitch.isChecked());
                 alarmDatabaseHandler.updateAlarm(newAlarm);
                 alarmManagerReceiver.setAlarms(context);
 
@@ -77,12 +79,12 @@ public class AlarmAdapter extends BaseAdapter {
         TextView alarm_name = (TextView) view.findViewById(R.id.alarm_name);
         TextView alarm_days = (TextView) view.findViewById(R.id.alarm_days);
 
-        alarmSwitch.setChecked(alarm.getEnable());
-        alarm_time.setText(alarm.getAlarm_time());
+        alarmSwitch.setChecked(alarm.getEnabled());
+        alarm_time.setText(alarm.getAlarmTime());
         alarm_time.setTextColor(Color.WHITE);
-        alarm_name.setText(alarm.getAlarm_name());
+        alarm_name.setText(alarm.getAlarmName());
         alarm_name.setTextColor(Color.WHITE);
-        alarm_days.setText(alarm.getAlarm_day());
+        alarm_days.setText(alarm.getAlarmDays());
         alarm_days.setTextColor(Color.WHITE);
 
         return view;

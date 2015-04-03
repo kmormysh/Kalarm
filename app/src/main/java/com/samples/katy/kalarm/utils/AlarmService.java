@@ -1,8 +1,10 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.utils;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
+import com.samples.katy.kalarm.activities.AlarmWakeUpActivity;
 
 public class AlarmService extends Service {
 

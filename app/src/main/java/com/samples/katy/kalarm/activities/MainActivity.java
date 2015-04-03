@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -12,6 +12,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.adapters.AlarmAdapter;
+import com.samples.katy.kalarm.utils.AlarmDatabaseHandler;
+import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
+import com.samples.katy.kalarm.dialogfragments.AlarmSetupDialogFragment;
+import com.samples.katy.kalarm.intefraces.DialogCloseListener;
+import com.samples.katy.kalarm.R;
+
 import java.util.List;
 
 
@@ -21,7 +29,6 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     private AlarmManagerReceiver alarmManagerReceiver;
     private AlarmAdapter alarmAdapter;
     private ListView alarmList;
-    private Button btn_setAlarm;
     private List<Alarm> alarms;
 
     @Override
@@ -31,14 +38,13 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
         setContentView(R.layout.activity_main);
 
         alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
-//        alarmDatabaseHandler.deleteAll();
 
-        btn_setAlarm = (Button) findViewById(R.id.btn_setalarm);
-        btn_setAlarm.setOnClickListener(new View.OnClickListener() {
+        Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
+        button_setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                SetAlarmDialogFragment dialog = new SetAlarmDialogFragment();
+                AlarmSetupDialogFragment dialog = new AlarmSetupDialogFragment();
                 dialog.openForCreate(getFragmentManager(), MainActivity.this);
                 dialog.setOnCloseListener(MainActivity.this);
                 alarmList.invalidate();
@@ -85,9 +91,9 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
             }
             ft.addToBackStack(null);
 
-            SetAlarmDialogFragment setAlarmDialogFragment = new SetAlarmDialogFragment();
-            setAlarmDialogFragment.openForEdit(getFragmentManager(), alarm, this);
-            setAlarmDialogFragment.setOnCloseListener(this);
+            AlarmSetupDialogFragment alarmSetupDialogFragment = new AlarmSetupDialogFragment();
+            alarmSetupDialogFragment.openForEdit(getFragmentManager(), alarm, this);
+            alarmSetupDialogFragment.setOnCloseListener(this);
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManagerReceiver.cancelAlarm(this);
@@ -108,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     @Override
     public void onCloseCreate(boolean[] days, String time, String name, boolean isRepeat) {
         Alarm newAlarm = new Alarm(time, name, days, isRepeat, false);
-        if (newAlarm.checkSelectedDays()) {
+        if (newAlarm.isAtLeastOneDaySelected()) {
             alarmDatabaseHandler.addAlarm(newAlarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
@@ -118,12 +124,12 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     @Override
     public void onCloseUpdate(int alarm_id, boolean[] days, String time, String name, boolean isRepeat) {
         Alarm updateAlarm = alarmDatabaseHandler.getAlarm(alarm_id);
-        updateAlarm.setAlarm_name(name);
-        updateAlarm.setAlarm_time(time);
+        updateAlarm.setAlarmName(name);
+        updateAlarm.setAlarmTime(time);
         updateAlarm.setDays(days);
-        updateAlarm.setAlarm_day(Alarm.parseDaysIntToString(days));
-        updateAlarm.setRepeat_weekly(isRepeat);
-        if (updateAlarm.checkSelectedDays()) {
+        updateAlarm.setAlarmDays(Alarm.parseDaysIntToString(days));
+        updateAlarm.setRepeatedWeekly(isRepeat);
+        if (updateAlarm.isAtLeastOneDaySelected()) {
             alarmDatabaseHandler.updateAlarm(updateAlarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();

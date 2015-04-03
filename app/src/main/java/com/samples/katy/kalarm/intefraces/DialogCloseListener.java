@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm;
+package com.samples.katy.kalarm.intefraces;
 
 public interface DialogCloseListener {
 
