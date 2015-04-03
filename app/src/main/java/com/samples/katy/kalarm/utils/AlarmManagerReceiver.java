@@ -13,7 +13,8 @@ import java.util.List;
 
 public class AlarmManagerReceiver extends BroadcastReceiver {
 
-    final public static String TIME = "time";
+    final public static String HOURS = "hours";
+    final public static String MINUTES = "minutes";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,8 +32,8 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
                 PendingIntent pendingIntent = createPendingIntent(context, alarm);
 
                 Calendar calendar = Calendar.getInstance();
-                int hours = alarm.getHours();
-                int minutes = alarm.getMinutes();
+                int hours = alarm.getAlarmHours();
+                int minutes = alarm.getAlarmMinutes();
 
                 calendar.set(Calendar.HOUR_OF_DAY, hours);
                 calendar.set(Calendar.MINUTE, minutes);
@@ -92,7 +93,8 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
     private static PendingIntent createPendingIntent(Context context, Alarm alarm) {
         Intent intent = new Intent(context, AlarmService.class);
-        intent.putExtra(TIME, alarm.getAlarmTime());
+        intent.putExtra(HOURS, alarm.getAlarmHours());
+        intent.putExtra(MINUTES, alarm.getAlarmMinutes());
 
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

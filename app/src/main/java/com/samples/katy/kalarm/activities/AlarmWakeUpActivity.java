@@ -50,7 +50,9 @@ public class AlarmWakeUpActivity extends Activity {
         }
 
         TextView btnAlarmTime = (TextView) findViewById(R.id.alarmTime);
-        btnAlarmTime.setText(getIntent().getStringExtra(AlarmManagerReceiver.TIME));
+        String time = String.format("%02d:%02d", getIntent().getStringExtra(AlarmManagerReceiver.HOURS),
+                getIntent().getStringExtra(AlarmManagerReceiver.MINUTES));
+        btnAlarmTime.setText(time);
 
         Button snooze = (Button) findViewById(R.id.snooze);
         snooze.setOnClickListener(new View.OnClickListener() {

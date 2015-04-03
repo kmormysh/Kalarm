@@ -19,7 +19,8 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_DAY = "days";
-    private static final String KET_TIME = "time";
+    private static final String KEY_HOURS = "hours";
+    private static final String KET_MINUTES = "minutes";
     private static final String KEY_REPEAT = "repeat";
     private static final String KEY_ENABLE = "enable";
 
@@ -41,8 +42,9 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, alarm.getAlarmName());
-        values.put(KEY_DAY, alarm.getAlarmDays());
-        values.put(KET_TIME, alarm.getAlarmTime());
+        values.put(KEY_DAY, alarm.convertDaysIntToString(alarm.getDays()));
+        values.put(KEY_HOURS, alarm.getAlarmHours());
+        values.put(KET_MINUTES, alarm.getAlarmMinutes());
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
         values.put(KEY_ENABLE, alarm.getEnabled() ? 1:0);
 
@@ -54,8 +56,8 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
     public Alarm getAlarm(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_ALARMS, new String[]{KEY_ID, KEY_NAME, KEY_DAY, KET_TIME,
-                                                            KEY_REPEAT, KEY_ENABLE},
+        Cursor cursor = db.query(TABLE_ALARMS, new String[]{KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS,
+                                                            KET_MINUTES, KEY_REPEAT, KEY_ENABLE},
                 KEY_ID + "=?",
                 new String[]{String.valueOf(id)},
                 null, null, null, null);
@@ -64,16 +66,20 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }
 
-        Alarm alarm = new Alarm(cursor.getInt(0), cursor.getString(3), cursor.getString(1),
-                                cursor.getString(2), cursor.getInt(4)>0, cursor.getInt(5)>0);
+        Alarm alarm = new Alarm(cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                                cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
+                                cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
+                                cursor.getString(cursor.getColumnIndex(KEY_NAME)),
+                                Alarm.convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+                                cursor.getInt(cursor.getColumnIndex(KEY_REPEAT))>0,
+                                cursor.getInt(cursor.getColumnIndex(KEY_ENABLE))>0);
 
-        alarm.setDays(alarm.parseDaysStringToInt(alarm.getAlarmDays()));
 
         return alarm;
     }
 
     public List<Alarm> getAllAlarms() {
-        List<Alarm> alarmList = new ArrayList<Alarm>();
+        List<Alarm> alarmList = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -82,14 +88,13 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Alarm alarm = new Alarm();
-                alarm.setId(cursor.getInt(0));
-                alarm.setAlarmName(cursor.getString(1));
-                alarm.setAlarmDays(cursor.getString(2));
-                alarm.setAlarmTime(cursor.getString(3));
-                alarm.setRepeatedWeekly(cursor.getInt(4) > 0);
-                alarm.setEnabled(cursor.getInt(5) > 0);
-
-                alarm.setDays(alarm.parseDaysStringToInt(alarm.getAlarmDays()));
+                alarm.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+                alarm.setAlarmName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+                alarm.setDays(alarm.convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))));
+                alarm.setAlarmHours(cursor.getInt(cursor.getColumnIndex(KEY_HOURS)));
+                alarm.setAlarmMinutes(cursor.getInt(cursor.getColumnIndex(KET_MINUTES)));
+                alarm.setRepeatedWeekly(cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0);
+                alarm.setEnabled(cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
 
                 alarmList.add(alarm);
             } while (cursor.moveToNext());
@@ -113,8 +118,9 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_ID, alarm.getId());
         values.put(KEY_NAME, alarm.getAlarmName());
-        values.put(KEY_DAY, alarm.parseDaysIntToString(alarm.getDays()));
-        values.put(KET_TIME, alarm.getAlarmTime());
+        values.put(KEY_DAY, alarm.convertDaysIntToString(alarm.getDays()));
+        values.put(KEY_HOURS, alarm.getAlarmHours());
+        values.put(KET_MINUTES, alarm.getAlarmMinutes());
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
         values.put(KEY_ENABLE, alarm.getEnabled() ? 1:0);
 
@@ -140,8 +146,9 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CALLS_TABLE = "CREATE TABLE " + TABLE_ALARMS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_DAY + " INTEGER," + KET_TIME + " TEXT,"
-                + KEY_REPEAT + " INTEGER," + KEY_ENABLE + " INTEGER" + ")";
+                + KEY_DAY + " INTEGER," + KEY_HOURS + " INTEGER,"
+                + KET_MINUTES + " INTEGER," + KEY_REPEAT + " INTEGER,"
+                + KEY_ENABLE + " INTEGER" + ")";
         db.execSQL(CREATE_CALLS_TABLE);
 
     }

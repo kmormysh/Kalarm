@@ -39,6 +39,8 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
         alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
 
+        deleteDatabase("alarmManager");
+
         Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
         button_setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +55,8 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
         alarms = alarmDatabaseHandler.getAllAlarms();
 
-        alarmAdapter = new AlarmAdapter(getBaseContext(), alarms);
+        alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
+                new AlarmDatabaseHandler(getBaseContext()), new AlarmManagerReceiver());
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
@@ -93,7 +96,6 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
             AlarmSetupDialogFragment alarmSetupDialogFragment = new AlarmSetupDialogFragment();
             alarmSetupDialogFragment.openForEdit(getFragmentManager(), alarm, this);
-            alarmSetupDialogFragment.setOnCloseListener(this);
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManagerReceiver.cancelAlarm(this);
@@ -112,8 +114,8 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     }
 
     @Override
-    public void onCloseCreate(boolean[] days, String time, String name, boolean isRepeat) {
-        Alarm newAlarm = new Alarm(time, name, days, isRepeat, false);
+    public void onCloseCreate(boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
+        Alarm newAlarm = new Alarm(hours, minutes, name, days, isRepeat, false);
         if (newAlarm.isAtLeastOneDaySelected()) {
             alarmDatabaseHandler.addAlarm(newAlarm);
             alarmAdapter.getAlarmList();
@@ -122,12 +124,12 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     }
 
     @Override
-    public void onCloseUpdate(int alarm_id, boolean[] days, String time, String name, boolean isRepeat) {
+    public void onCloseUpdate(int alarm_id, boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
         Alarm updateAlarm = alarmDatabaseHandler.getAlarm(alarm_id);
         updateAlarm.setAlarmName(name);
-        updateAlarm.setAlarmTime(time);
+        updateAlarm.setAlarmHours(hours);
+        updateAlarm.setAlarmMinutes(minutes);
         updateAlarm.setDays(days);
-        updateAlarm.setAlarmDays(Alarm.parseDaysIntToString(days));
         updateAlarm.setRepeatedWeekly(isRepeat);
         if (updateAlarm.isAtLeastOneDaySelected()) {
             alarmDatabaseHandler.updateAlarm(updateAlarm);

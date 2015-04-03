@@ -30,7 +30,7 @@
         android:id="@+id/alarm_days"
         android:text="weekend"
         android:layout_marginLeft="5sp"
-        android:layout_below="@+id/alarmname"
+        android:layout_below="@+id/alarm_name"
         android:layout_toRightOf="@+id/alarm_time"
         android:layout_toEndOf="@+id/alarm_time"
         android:layout_marginBottom="5sp"

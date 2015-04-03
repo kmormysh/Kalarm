@@ -22,11 +22,12 @@ public class AlarmAdapter extends BaseAdapter {
     private AlarmDatabaseHandler alarmDatabaseHandler;
     private AlarmManagerReceiver alarmManagerReceiver;
 
-    public AlarmAdapter(Context context, List<Alarm> alarmList) {
+    public AlarmAdapter(Context context, List<Alarm> alarmList, AlarmDatabaseHandler alarmDatabaseHandler,
+                        AlarmManagerReceiver alarmManagerReceiver) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.alarmList = alarmList;
-        alarmDatabaseHandler = new AlarmDatabaseHandler(context);
-        alarmManagerReceiver = new AlarmManagerReceiver();
+        this.alarmDatabaseHandler = alarmDatabaseHandler;
+        this.alarmManagerReceiver = alarmManagerReceiver;
     }
 
 
@@ -80,17 +81,27 @@ public class AlarmAdapter extends BaseAdapter {
         TextView alarm_days = (TextView) view.findViewById(R.id.alarm_days);
 
         alarmSwitch.setChecked(alarm.getEnabled());
-        alarm_time.setText(alarm.getAlarmTime());
-        alarm_time.setTextColor(Color.WHITE);
+        alarm_time.setText(String.format("%02d:%02d", alarm.getAlarmHours(), alarm.getAlarmMinutes()));
         alarm_name.setText(alarm.getAlarmName());
-        alarm_name.setTextColor(Color.WHITE);
-        alarm_days.setText(alarm.getAlarmDays());
-        alarm_days.setTextColor(Color.WHITE);
+
+        alarm_days.setText(convertDaysIntToString(alarm.getDays(), context));
 
         return view;
     }
 
-    public void getAlarmList () {
+    public void getAlarmList() {
         alarmList = alarmDatabaseHandler.getAllAlarms();
+    }
+
+    private String convertDaysIntToString(boolean[] days, Context context) {
+        int[] dayNames = {R.string.monday, R.string.tuesday, R.string.wednesday,
+                R.string.thursday, R.string.friday, R.string.saturday, R.string.sunday};
+        String result = "";
+        for (int i = 0; i < days.length; i++) {
+            if (days[i]) {
+                result += context.getString(dayNames[i]) + " ";
+            }
+        }
+        return result;
     }
 }

@@ -56,8 +56,10 @@ public class AlarmSetupDialogFragment extends DialogFragment implements View.OnC
             }
             alarm_name.setText(alarm.getAlarmName());
 
-            timePicker.setCurrentHour(alarm.getHours());
-            timePicker.setCurrentMinute(alarm.getMinutes());
+            timePicker.setCurrentHour(alarm.getAlarmHours());
+            timePicker.setCurrentMinute(alarm.getAlarmMinutes());
+
+            btn_create.setText("Save");
         }
 
         return view;
@@ -83,11 +85,11 @@ public class AlarmSetupDialogFragment extends DialogFragment implements View.OnC
             if (this.dialogCloseListener != null) {
                 if (alarm != null) {
                     this.dialogCloseListener.onCloseUpdate(alarm.getId(), repeatDays,
-                            String.format("%02d:%02d", timePicker.getCurrentHour(), timePicker.getCurrentMinute()),
+                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(),
                             alarm_name.getText().toString(), true);
                 } else {
                     this.dialogCloseListener.onCloseCreate(repeatDays,
-                            String.format("%02d:%02d", timePicker.getCurrentHour(), timePicker.getCurrentMinute()),
+                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(),
                             alarm_name.getText().toString(), true);
                 }
                 dismiss();
@@ -102,13 +104,13 @@ public class AlarmSetupDialogFragment extends DialogFragment implements View.OnC
 
     public void openForCreate(FragmentManager fragmentManager,DialogCloseListener dialogCloseListener) {
         this.dialogCloseListener = dialogCloseListener;
-        show(fragmentManager, "create");
+        show(fragmentManager, "Create new alarm");
     }
 
     public void openForEdit(FragmentManager fragmentManager, Alarm alarm, DialogCloseListener dialogCloseListener) {
         this.dialogCloseListener = dialogCloseListener;
         //load data from alarm to UI
         this.alarm = alarm;
-        show(fragmentManager, "title for edit");
+        show(fragmentManager, "Edit current alarm");
     }
 }
