@@ -54,14 +54,14 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
         alarms = alarmsRepository.getAllAlarms(false);
 
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
-                new AlarmsRepository(getBaseContext()), new AlarmManager());
+                new AlarmsRepository(getBaseContext()), new AlarmManager(alarmsRepository));
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
 
         alarmList.setAdapter(alarmAdapter);
 
-        alarmManager = new AlarmManager();
+        alarmManager = new AlarmManager(alarmsRepository);
     }
 
     @Override

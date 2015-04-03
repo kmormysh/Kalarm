@@ -14,10 +14,19 @@ public class AlarmManager {
     final public static String HOURS = "hours";
     final public static String MINUTES = "minutes";
 
+    private AlarmsRepository alarmsRepository;
+
     public static void rescheduleAlarms(Context context) {
+        new AlarmManager(new AlarmsRepository(context)).reschedule(context);
+    }
+
+    public AlarmManager (AlarmsRepository alarmsRepository){
+        this.alarmsRepository = alarmsRepository;
+    }
+
+    public void reschedule (Context context){
         cancelAlarms(context);
 
-        AlarmsRepository alarmsRepository = new AlarmsRepository(context);
         List<Alarm> alarms = alarmsRepository.getAllAlarms(true);
 
         for (Alarm alarm : alarms) {
@@ -64,7 +73,7 @@ public class AlarmManager {
         }
     }
 
-    public static void setAlarm(Context context, Calendar calendar, PendingIntent pendingIntent) {
+    public void setAlarm(Context context, Calendar calendar, PendingIntent pendingIntent) {
         android.app.AlarmManager am = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.set(android.app.AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
@@ -76,7 +85,7 @@ public class AlarmManager {
         alarmManager.cancel(sender);
     }
 
-    private static PendingIntent createPendingIntent(Context context, Alarm alarm) {
+    private PendingIntent createPendingIntent(Context context, Alarm alarm) {
         Intent intent = new Intent(context, AlarmService.class);
         intent.putExtra(HOURS, alarm.getAlarmHours());
         intent.putExtra(MINUTES, alarm.getAlarmMinutes());
@@ -84,10 +93,9 @@ public class AlarmManager {
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static void cancelAlarms(Context context) {
-        AlarmsRepository dbHelper = new AlarmsRepository(context);
+    public void cancelAlarms(Context context) {
 
-        List<Alarm> alarms = dbHelper.getAllAlarms(false);
+        List<Alarm> alarms = alarmsRepository.getAllAlarms(false);
 
         if (alarms != null) {
             for (Alarm alarm : alarms) {
