@@ -13,7 +13,6 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.samples.katy.kalarm.models.Alarm;
-import com.samples.katy.kalarm.intefraces.DialogCloseListener;
 import com.samples.katy.kalarm.R;
 import com.samples.katy.kalarm.utils.ViewTreeHelper;
 
@@ -112,5 +111,11 @@ public class AlarmSetupDialogFragment extends DialogFragment implements View.OnC
         //load data from alarm to UI
         this.alarm = alarm;
         show(fragmentManager, "Edit current alarm");
+    }
+
+    public interface DialogCloseListener {
+
+        public void onCloseCreate(boolean[] days, int hours, int minutes, String name, boolean isRepeat);
+        public void onCloseUpdate(int alarm_id, boolean[] days, int hours, int minutes, String name, boolean isRepeat);
     }
 }

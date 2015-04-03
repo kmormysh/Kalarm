@@ -21,8 +21,9 @@ public class AlarmWakeUpActivity extends Activity {
 
     private final String TAG = this.getClass().getSimpleName();
     private PowerManager.WakeLock mWakeLock;
-    private MediaPlayer mPlayer;
+    private MediaPlayer mediaPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
+    private static final float HALF_OF_MAX_VOLUME = 0.6f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +32,17 @@ public class AlarmWakeUpActivity extends Activity {
 
         //Play alarm tone
         String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
-        mPlayer = new MediaPlayer();
+        mediaPlayer = new MediaPlayer();
         try {
             if (tone != null && !tone.equals("")) {
                 Uri toneUri = Uri.parse(tone);
                 if (toneUri != null) {
-                    mPlayer.setDataSource(this, toneUri);
-                    mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mPlayer.setLooping(true);
-                    mPlayer.setVolume(0.6f, 0.6f);
-                    mPlayer.prepare();
-                    mPlayer.start();
-
+                    mediaPlayer.setDataSource(this, toneUri);
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mediaPlayer.setLooping(true);
+                    mediaPlayer.setVolume(HALF_OF_MAX_VOLUME, HALF_OF_MAX_VOLUME);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
                 }
             }
         } catch (Exception e) {
@@ -58,8 +58,7 @@ public class AlarmWakeUpActivity extends Activity {
         snooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                mPlayer.stop();
+                mediaPlayer.stop();
             }
         });
 
@@ -67,7 +66,7 @@ public class AlarmWakeUpActivity extends Activity {
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPlayer.stop();
+                mediaPlayer.stop();
                 finish();
             }
         });
@@ -76,11 +75,7 @@ public class AlarmWakeUpActivity extends Activity {
 
             @Override
             public void run() {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-
+                setWindowFlags();
                 if (mWakeLock != null && mWakeLock.isHeld()) {
                     mWakeLock.release();
                 }
@@ -90,16 +85,14 @@ public class AlarmWakeUpActivity extends Activity {
         new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
     }
 
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onResume() {
         super.onResume();
 
         // Set the window to keep screen on
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        setWindowFlags();
 
         // Acquire wakelock
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
@@ -120,5 +113,12 @@ public class AlarmWakeUpActivity extends Activity {
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
         }
+    }
+
+    private void setWindowFlags() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     }
 }

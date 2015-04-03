@@ -17,13 +17,12 @@ import com.samples.katy.kalarm.adapters.AlarmAdapter;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
 import com.samples.katy.kalarm.utils.AlarmManager;
 import com.samples.katy.kalarm.dialogfragments.AlarmSetupDialogFragment;
-import com.samples.katy.kalarm.intefraces.DialogCloseListener;
 import com.samples.katy.kalarm.R;
 
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements DialogCloseListener {
+public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener {
 
     private AlarmsRepository alarmsRepository;
     private AlarmManager alarmManager;
@@ -38,6 +37,8 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
         setContentView(R.layout.activity_main);
 
         alarmsRepository = new AlarmsRepository(getBaseContext());
+
+        alarmManager = new AlarmManager(alarmsRepository);
 
         Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
         button_setAlarm.setOnClickListener(new View.OnClickListener() {
@@ -54,14 +55,13 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
         alarms = alarmsRepository.getAllAlarms(false);
 
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
-                new AlarmsRepository(getBaseContext()), new AlarmManager(alarmsRepository));
+                alarmsRepository, alarmManager);
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
 
         alarmList.setAdapter(alarmAdapter);
 
-        alarmManager = new AlarmManager(alarmsRepository);
     }
 
     @Override
