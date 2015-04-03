@@ -11,8 +11,6 @@ public class Alarm {
     private boolean[] days = new boolean[DAYS_PER_WEEK];
     public static final int DAYS_PER_WEEK = 7;
 
-    public Alarm() { }
-
     public Alarm(int alarmId, int hours, int minutes, String alarmName, boolean[] alarmDays,
                  boolean isRepeatedWeekly, boolean isEnabled) {
         this.alarmHours = hours;

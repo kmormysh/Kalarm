@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import com.samples.katy.kalarm.models.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
-import com.samples.katy.kalarm.utils.AlarmDatabaseHandler;
+import com.samples.katy.kalarm.utils.AlarmsRepository;
 import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
 import com.samples.katy.kalarm.dialogfragments.AlarmSetupDialogFragment;
 import com.samples.katy.kalarm.intefraces.DialogCloseListener;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements DialogCloseListener {
 
-    private AlarmDatabaseHandler alarmDatabaseHandler;
+    private AlarmsRepository alarmsRepository;
     private AlarmManagerReceiver alarmManagerReceiver;
     private AlarmAdapter alarmAdapter;
     private ListView alarmList;
@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
         setContentView(R.layout.activity_main);
 
-        alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
+        alarmsRepository = new AlarmsRepository(getBaseContext());
 
         Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
         button_setAlarm.setOnClickListener(new View.OnClickListener() {
@@ -51,10 +51,10 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
             }
         });
 
-        alarms = alarmDatabaseHandler.getAllAlarms();
+        alarms = alarmsRepository.getAllAlarms();
 
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
-                new AlarmDatabaseHandler(getBaseContext()), new AlarmManagerReceiver());
+                new AlarmsRepository(getBaseContext()), new AlarmManagerReceiver());
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        alarms = alarmDatabaseHandler.getAllAlarms();
+        alarms = alarmsRepository.getAllAlarms();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
         String[] menuItems = getResources().getStringArray(R.array.menu);
@@ -97,7 +97,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManagerReceiver.cancelAlarm(this);
-            alarmDatabaseHandler.deleteAlarm(alarm);
+            alarmsRepository.deleteAlarm(alarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
@@ -115,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
     public void onCloseCreate(boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
         Alarm newAlarm = new Alarm(0, hours, minutes, name, days, isRepeat, false);
         if (newAlarm.isAtLeastOneDaySelected()) {
-            alarmDatabaseHandler.addAlarm(newAlarm);
+            alarmsRepository.addAlarm(newAlarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
@@ -123,14 +123,14 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
     @Override
     public void onCloseUpdate(int alarm_id, boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
-        Alarm updateAlarm = alarmDatabaseHandler.getAlarm(alarm_id);
+        Alarm updateAlarm = alarmsRepository.getAlarm(alarm_id);
         updateAlarm.setAlarmName(name);
         updateAlarm.setAlarmHours(hours);
         updateAlarm.setAlarmMinutes(minutes);
         updateAlarm.setDays(days);
         updateAlarm.setRepeatedWeekly(isRepeat);
         if (updateAlarm.isAtLeastOneDaySelected()) {
-            alarmDatabaseHandler.updateAlarm(updateAlarm);
+            alarmsRepository.updateAlarm(updateAlarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }

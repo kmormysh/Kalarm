@@ -1,7 +1,6 @@
 package com.samples.katy.kalarm.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.samples.katy.kalarm.models.Alarm;
-import com.samples.katy.kalarm.utils.AlarmDatabaseHandler;
+import com.samples.katy.kalarm.utils.AlarmsRepository;
 import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
 import com.samples.katy.kalarm.R;
 
@@ -19,14 +18,14 @@ import java.util.List;
 public class AlarmAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<Alarm> alarmList;
-    private AlarmDatabaseHandler alarmDatabaseHandler;
+    private AlarmsRepository alarmsRepository;
     private AlarmManagerReceiver alarmManagerReceiver;
 
-    public AlarmAdapter(Context context, List<Alarm> alarmList, AlarmDatabaseHandler alarmDatabaseHandler,
+    public AlarmAdapter(Context context, List<Alarm> alarmList, AlarmsRepository alarmsRepository,
                         AlarmManagerReceiver alarmManagerReceiver) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.alarmList = alarmList;
-        this.alarmDatabaseHandler = alarmDatabaseHandler;
+        this.alarmsRepository = alarmsRepository;
         this.alarmManagerReceiver = alarmManagerReceiver;
     }
 
@@ -69,7 +68,7 @@ public class AlarmAdapter extends BaseAdapter {
                 Alarm newAlarm = getAlarm(pos);
 
                 newAlarm.setIsEnabled(alarmSwitch.isChecked());
-                alarmDatabaseHandler.updateAlarm(newAlarm);
+                alarmsRepository.updateAlarm(newAlarm);
                 alarmManagerReceiver.setAlarms(context);
 
                 notifyDataSetChanged();
@@ -90,7 +89,7 @@ public class AlarmAdapter extends BaseAdapter {
     }
 
     public void getAlarmList() {
-        alarmList = alarmDatabaseHandler.getAllAlarms();
+        alarmList = alarmsRepository.getAllAlarms();
     }
 
     private String convertDaysIntToString(boolean[] days, Context context) {

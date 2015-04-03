@@ -11,7 +11,7 @@ import com.samples.katy.kalarm.models.Alarm;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlarmDatabaseHandler extends SQLiteOpenHelper {
+public class AlarmsRepository extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "alarmManager";
@@ -24,17 +24,8 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_REPEAT = "repeat";
     private static final String KEY_ENABLE = "enable";
 
-    public AlarmDatabaseHandler(Context context) {
+    public AlarmsRepository(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    public boolean recordsExist() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT " + KEY_ID + " FROM " + TABLE_ALARMS;
-
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        return cursor.moveToNext();
     }
 
     public void addAlarm(Alarm alarm) {
@@ -45,8 +36,8 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
         values.put(KEY_HOURS, alarm.getAlarmHours());
         values.put(KET_MINUTES, alarm.getAlarmMinutes());
-        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
-        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1:0);
+        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
+        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
 
         db.insert(TABLE_ALARMS, null, values);
 
@@ -55,25 +46,27 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
     public Alarm getAlarm(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
+        String[] keys = {KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS, KET_MINUTES, KEY_REPEAT, KEY_ENABLE};
 
-        Cursor cursor = db.query(TABLE_ALARMS, new String[]{KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS,
-                                                            KET_MINUTES, KEY_REPEAT, KEY_ENABLE},
+        Cursor cursor = db.query(TABLE_ALARMS,
+                keys,
                 KEY_ID + "=?",
                 new String[]{String.valueOf(id)},
                 null, null, null, null);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
+        cursor.moveToFirst();
+
 
         Alarm alarm = new Alarm(cursor.getInt(cursor.getColumnIndex(KEY_ID)),
-                                cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
-                                cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
-                                cursor.getString(cursor.getColumnIndex(KEY_NAME)),
-                                convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
-                                cursor.getInt(cursor.getColumnIndex(KEY_REPEAT))>0,
-                                cursor.getInt(cursor.getColumnIndex(KEY_ENABLE))>0);
+                cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
+                cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
+                cursor.getString(cursor.getColumnIndex(KEY_NAME)),
+                convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+                cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
+                cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
 
+
+        cursor.close();
 
         return alarm;
     }
@@ -87,29 +80,22 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Alarm alarm = new Alarm();
-                alarm.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
-                alarm.setAlarmName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-                alarm.setDays(convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))));
-                alarm.setAlarmHours(cursor.getInt(cursor.getColumnIndex(KEY_HOURS)));
-                alarm.setAlarmMinutes(cursor.getInt(cursor.getColumnIndex(KET_MINUTES)));
-                alarm.setRepeatedWeekly(cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0);
-                alarm.setIsEnabled(cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
+                Alarm alarm = new Alarm(
+                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                        cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
+                        cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
+                        cursor.getString(cursor.getColumnIndex(KEY_NAME)),
+                        convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+                        cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
+                        cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
 
                 alarmList.add(alarm);
             } while (cursor.moveToNext());
         }
 
-        return alarmList;
-    }
-
-    public int getAlarmCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_ALARMS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
         cursor.close();
 
-        return cursor.getCount();
+        return alarmList;
     }
 
     public int updateAlarm(Alarm alarm) {
@@ -121,8 +107,8 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
         values.put(KEY_HOURS, alarm.getAlarmHours());
         values.put(KET_MINUTES, alarm.getAlarmMinutes());
-        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1:0);
-        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1:0);
+        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
+        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
 
         return db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(alarm.getId())});
@@ -144,10 +130,14 @@ public class AlarmDatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CALLS_TABLE = "CREATE TABLE " + TABLE_ALARMS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_DAY + " INTEGER," + KEY_HOURS + " INTEGER,"
-                + KET_MINUTES + " INTEGER," + KEY_REPEAT + " INTEGER,"
+        String CREATE_CALLS_TABLE = "CREATE TABLE "
+                + TABLE_ALARMS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_DAY + " INTEGER,"
+                + KEY_HOURS + " INTEGER,"
+                + KET_MINUTES + " INTEGER,"
+                + KEY_REPEAT + " INTEGER,"
                 + KEY_ENABLE + " INTEGER" + ")";
         db.execSQL(CREATE_CALLS_TABLE);
 

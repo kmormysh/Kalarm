@@ -24,8 +24,8 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
     public static void setAlarms(Context context) {
         cancelAlarms(context);
 
-        AlarmDatabaseHandler alarmDatabaseHandler = new AlarmDatabaseHandler(context);
-        List<Alarm> alarms = alarmDatabaseHandler.getAllAlarms();
+        AlarmsRepository alarmsRepository = new AlarmsRepository(context);
+        List<Alarm> alarms = alarmsRepository.getAllAlarms();
 
         for (Alarm alarm : alarms) {
             if (alarm.getIsEnabled()) { //is On
@@ -100,7 +100,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
     }
 
     public static void cancelAlarms(Context context) {
-        AlarmDatabaseHandler dbHelper = new AlarmDatabaseHandler(context);
+        AlarmsRepository dbHelper = new AlarmsRepository(context);
 
         List<Alarm> alarms = dbHelper.getAllAlarms();
 
