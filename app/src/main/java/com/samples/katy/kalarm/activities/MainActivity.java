@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.samples.katy.kalarm.models.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
-import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
+import com.samples.katy.kalarm.utils.AlarmManager;
 import com.samples.katy.kalarm.dialogfragments.AlarmSetupDialogFragment;
 import com.samples.katy.kalarm.intefraces.DialogCloseListener;
 import com.samples.katy.kalarm.R;
@@ -26,7 +26,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity implements DialogCloseListener {
 
     private AlarmsRepository alarmsRepository;
-    private AlarmManagerReceiver alarmManagerReceiver;
+    private AlarmManager alarmManager;
     private AlarmAdapter alarmAdapter;
     private ListView alarmList;
     private List<Alarm> alarms;
@@ -51,17 +51,17 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
             }
         });
 
-        alarms = alarmsRepository.getAllAlarms();
+        alarms = alarmsRepository.getAllAlarms(false);
 
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
-                new AlarmsRepository(getBaseContext()), new AlarmManagerReceiver());
+                new AlarmsRepository(getBaseContext()), new AlarmManager());
 
         alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
 
         alarmList.setAdapter(alarmAdapter);
 
-        alarmManagerReceiver = new AlarmManagerReceiver();
+        alarmManager = new AlarmManager();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        alarms = alarmsRepository.getAllAlarms();
+        alarms = alarmsRepository.getAllAlarms(false);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
         String[] menuItems = getResources().getStringArray(R.array.menu);
@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity implements DialogCloseListen
             alarmSetupDialogFragment.openForEdit(getFragmentManager(), alarm, this);
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
-            alarmManagerReceiver.cancelAlarm(this);
+            alarmManager.cancelAlarm(this);
             alarmsRepository.deleteAlarm(alarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();

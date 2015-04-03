@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.Handler;
 
-import com.samples.katy.kalarm.utils.AlarmManagerReceiver;
+import com.samples.katy.kalarm.utils.AlarmManager;
 import com.samples.katy.kalarm.R;
 
 public class AlarmWakeUpActivity extends Activity {
@@ -50,8 +50,8 @@ public class AlarmWakeUpActivity extends Activity {
         }
 
         TextView btnAlarmTime = (TextView) findViewById(R.id.alarmTime);
-        String time = String.format("%02d:%02d", getIntent().getStringExtra(AlarmManagerReceiver.HOURS),
-                getIntent().getStringExtra(AlarmManagerReceiver.MINUTES));
+        String time = String.format("%02d:%02d", getIntent().getStringExtra(AlarmManager.HOURS),
+                getIntent().getStringExtra(AlarmManager.MINUTES));
         btnAlarmTime.setText(time);
 
         Button snooze = (Button) findViewById(R.id.snooze);

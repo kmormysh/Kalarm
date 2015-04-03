@@ -56,7 +56,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
 
-
         Alarm alarm = new Alarm(cursor.getInt(cursor.getColumnIndex(KEY_ID)),
                 cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
                 cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
@@ -64,16 +63,18 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
                 cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
                 cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
-
-
         cursor.close();
 
         return alarm;
     }
 
-    public List<Alarm> getAllAlarms() {
+    public List<Alarm> getAllAlarms(boolean onlyEnabled) {
         List<Alarm> alarmList = new ArrayList<>();
+
         String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
+
+        if (onlyEnabled)
+            selectQuery += " WHERE " + KEY_ENABLE + " > 0 ";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -92,7 +93,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 alarmList.add(alarm);
             } while (cursor.moveToNext());
         }
-
         cursor.close();
 
         return alarmList;
@@ -140,7 +140,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 + KEY_REPEAT + " INTEGER,"
                 + KEY_ENABLE + " INTEGER" + ")";
         db.execSQL(CREATE_CALLS_TABLE);
-
     }
 
     @Override
@@ -157,7 +156,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
             int index = Integer.parseInt(repeatDays[i]);
             parsedDays[index] = true;
         }
-
         return parsedDays;
     }
 
@@ -168,7 +166,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 parsedDays += i + " ";
             }
         }
-
         return parsedDays;
     }
 }

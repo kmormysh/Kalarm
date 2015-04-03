@@ -10,7 +10,6 @@ public class ViewTreeHelper {
 
     public static List<View> getAllSubviews(View rootView){
 
-
         if (!(rootView instanceof ViewGroup)) {
             ArrayList<View> viewArrayList = new ArrayList<>();
             viewArrayList.add(rootView);
