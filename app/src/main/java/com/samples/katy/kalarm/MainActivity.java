@@ -1,11 +1,7 @@
 package com.samples.katy.kalarm;
 
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -19,7 +15,7 @@ import android.widget.ListView;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements DialogInterface.OnDismissListener  {
+public class MainActivity extends ActionBarActivity implements DialogCloseListener {
 
     private AlarmDatabaseHandler alarmDatabaseHandler;
     private AlarmManagerReceiver alarmManagerReceiver;
@@ -32,7 +28,6 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
 
         alarmDatabaseHandler = new AlarmDatabaseHandler(getBaseContext());
@@ -43,13 +38,12 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
             @Override
             public void onClick(View v) {
 
-                AlarmSettingsPopUp dialog = new AlarmSettingsPopUp();
-                dialog.show(getFragmentManager(), "Choose day of the week");
+                SetAlarmDialogFragment dialog = new SetAlarmDialogFragment();
+                dialog.openForCreate(getFragmentManager(), MainActivity.this);
+                dialog.setOnCloseListener(MainActivity.this);
                 alarmList.invalidate();
             }
-
         });
-
 
         alarms = alarmDatabaseHandler.getAllAlarms();
 
@@ -91,8 +85,9 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
             }
             ft.addToBackStack(null);
 
-            DialogFragment alarmDetails = AlarmDetails.newInstance(alarm.getId());
-            alarmDetails.show(ft, "dialog");
+            SetAlarmDialogFragment setAlarmDialogFragment = new SetAlarmDialogFragment();
+            setAlarmDialogFragment.openForEdit(getFragmentManager(), alarm, this);
+            setAlarmDialogFragment.setOnCloseListener(this);
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManagerReceiver.cancelAlarm(this);
@@ -111,8 +106,28 @@ public class MainActivity extends ActionBarActivity implements DialogInterface.O
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        alarmAdapter.getAlarmList();
-        alarmAdapter.notifyDataSetChanged();
+    public void onCloseCreate(boolean[] days, String time, String name, boolean isRepeat) {
+        Alarm newAlarm = new Alarm(time, name, days, isRepeat, false);
+        if (newAlarm.checkSelectedDays()) {
+            alarmDatabaseHandler.addAlarm(newAlarm);
+            alarmAdapter.getAlarmList();
+            alarmAdapter.notifyDataSetChanged();
+        }
     }
+
+    @Override
+    public void onCloseUpdate(int alarm_id, boolean[] days, String time, String name, boolean isRepeat) {
+        Alarm updateAlarm = alarmDatabaseHandler.getAlarm(alarm_id);
+        updateAlarm.setAlarm_name(name);
+        updateAlarm.setAlarm_time(time);
+        updateAlarm.setDays(days);
+        updateAlarm.setAlarm_day(Alarm.parseDaysIntToString(days));
+        updateAlarm.setRepeat_weekly(isRepeat);
+        if (updateAlarm.checkSelectedDays()) {
+            alarmDatabaseHandler.updateAlarm(updateAlarm);
+            alarmAdapter.getAlarmList();
+            alarmAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

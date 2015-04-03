@@ -6,9 +6,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Katy on 4/2/2015.
- */
 public class ViewTreeHelper {
 
     public static List<View> getAllSubviews(View rootView){

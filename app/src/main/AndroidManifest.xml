@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AlarmPopUpScreen" />
+        <activity android:name=".AlarmWakeUpActivity" />
 
         <service android:name=".AlarmService" android:enabled="true" />
 

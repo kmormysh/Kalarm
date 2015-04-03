@@ -14,10 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.Handler;
 
-/**
- * Created by Katy on 3/30/2015.
- */
-public class AlarmPopUpScreen extends Activity {
+public class AlarmWakeUpActivity extends Activity {
 
     private final String TAG = this.getClass().getSimpleName();
     private PowerManager.WakeLock mWakeLock;

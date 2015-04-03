@@ -9,6 +9,17 @@
     android:theme="@android:style/Theme.Holo"
     android:background="@color/button_material_dark">
 
+    <EditText
+        android:id="@+id/alarm_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5sp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="20sp"
+        android:text="New Alarm"/>
+
     <LinearLayout
         android:id="@+id/days_first_container"
         android:layout_width="match_parent"

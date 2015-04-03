@@ -9,9 +9,6 @@ import android.content.Intent;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * Created by Katy on 3/13/2015.
- */
 public class AlarmManagerReceiver extends BroadcastReceiver {
 
     final public static String TIME = "time";
