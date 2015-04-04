@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5sp"
     android:layout_marginTop="5sp"
-    android:orientation="vertical"
-    android:theme="@android:style/Theme.Holo"
-    android:background="@color/button_material_dark">
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/alarm_name"

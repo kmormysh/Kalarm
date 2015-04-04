@@ -1,8 +1,8 @@
 package com.samples.katy.kalarm.activities;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -22,7 +22,7 @@ import com.samples.katy.kalarm.R;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener {
+public class MainActivity extends Activity implements AlarmSetupDialogFragment.DialogCloseListener {
 
     private AlarmsRepository alarmsRepository;
     private AlarmManager alarmManager;
