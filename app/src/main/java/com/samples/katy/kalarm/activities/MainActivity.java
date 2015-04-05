@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.samples.katy.kalarm.models.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
@@ -40,7 +41,10 @@ public class MainActivity extends Activity implements AlarmSetupDialogFragment.D
 
         alarmManager = new AlarmManager(alarmsRepository);
 
-        Button button_setAlarm = (Button) findViewById(R.id.btn_setalarm);
+        alarmList = (ListView) findViewById(R.id.alarm_list);
+
+        FloatingActionButton button_setAlarm = (FloatingActionButton ) findViewById(R.id.btn_setalarm);
+        button_setAlarm.attachToListView(alarmList);
         button_setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +61,6 @@ public class MainActivity extends Activity implements AlarmSetupDialogFragment.D
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
                 alarmsRepository, alarmManager);
 
-        alarmList = (ListView) findViewById(R.id.alarm_list);
         registerForContextMenu(alarmList);
 
         alarmList.setAdapter(alarmAdapter);
