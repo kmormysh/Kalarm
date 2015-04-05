@@ -32,7 +32,7 @@ public class AlarmSetupDialogFragment extends DialogFragment {
     @InjectView(R.id.alarm_name) EditText alarm_name;
     @InjectView(R.id.btn_create) Button btn_create;
 
-    @OnClick(R.id.btn_create) void submit() {
+    @OnClick(R.id.btn_create) void create() {
         boolean[] repeatDays = new boolean[7];
         for (int i = 0; i < daysOfWeek.size(); i++) {
             Object tag = daysOfWeek.get(i).getTag();
