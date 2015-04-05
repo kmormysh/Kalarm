@@ -4,6 +4,6 @@
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:alertDialogStyle">@style/AppTheme</item>
+        <item name="colorPrimary">@color/actionBar</item>
     </style>
-
 </resources>
