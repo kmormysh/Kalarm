@@ -25,4 +25,5 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.android.support:support-v4:21.0.3'
+    compile project(":SliderPreference")
 }
