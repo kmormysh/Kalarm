@@ -1,4 +1,4 @@
-package com.samples.katy.kalarm.models.POJO;
+package com.samples.katy.kalarm.models.pojo;
 
 public class Alarm {
 

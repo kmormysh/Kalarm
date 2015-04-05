@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.samples.katy.kalarm.models.POJO.Alarm;
+import com.samples.katy.kalarm.models.pojo.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
 import com.samples.katy.kalarm.models.AlarmManager;
