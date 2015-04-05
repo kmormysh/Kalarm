@@ -17,6 +17,9 @@ import android.os.Handler;
 import com.samples.katy.kalarm.utils.AlarmManager;
 import com.samples.katy.kalarm.R;
 
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class AlarmWakeUpActivity extends Activity {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -24,6 +27,16 @@ public class AlarmWakeUpActivity extends Activity {
     private MediaPlayer mediaPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
     private static final float HALF_OF_MAX_VOLUME = 0.6f;
+
+    @InjectView(R.id.alarmTime) TextView btnAlarmTime;
+    @OnClick(R.id.snooze) void snooze() {
+        mediaPlayer.stop();
+    };
+
+    @OnClick (R.id.dismiss) void dismiss() {
+        mediaPlayer.stop();
+        finish();
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +62,9 @@ public class AlarmWakeUpActivity extends Activity {
             e.printStackTrace();
         }
 
-        TextView btnAlarmTime = (TextView) findViewById(R.id.alarmTime);
         String time = String.format("%02d:%02d", getIntent().getStringExtra(AlarmManager.HOURS),
                 getIntent().getStringExtra(AlarmManager.MINUTES));
         btnAlarmTime.setText(time);
-
-        Button snooze = (Button) findViewById(R.id.snooze);
-        snooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.stop();
-            }
-        });
-
-        Button dismiss = (Button) findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.stop();
-                finish();
-            }
-        });
 
         Runnable releaseWakelock = new Runnable() {
 
