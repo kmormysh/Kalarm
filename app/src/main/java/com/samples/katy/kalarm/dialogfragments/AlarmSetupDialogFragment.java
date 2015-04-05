@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
-import com.samples.katy.kalarm.models.POJO.Alarm;
+import com.samples.katy.kalarm.models.pojo.Alarm;
 import com.samples.katy.kalarm.R;
 import com.samples.katy.kalarm.utils.ViewTreeHelper;
 

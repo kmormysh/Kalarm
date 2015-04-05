@@ -4,7 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.samples.katy.kalarm.models.POJO.Alarm;
+import com.samples.katy.kalarm.models.pojo.Alarm;
 import com.samples.katy.kalarm.utils.AlarmService;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
 
