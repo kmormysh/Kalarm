@@ -40,36 +40,40 @@ public class AlarmManager {
 
             calendar.set(Calendar.HOUR_OF_DAY, hours);
             calendar.set(Calendar.MINUTE, minutes);
-            calendar.set(Calendar.SECOND, 00);
+            calendar.set(Calendar.SECOND, 0);
 
             //Find next time to set
             final int nowDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             final int nowHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             final int nowMinute = Calendar.getInstance().get(Calendar.MINUTE);
 
+            boolean isSet = false;
             //First check if it's later in the week
             for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; ++dayOfWeek) {
                 if (alarm.getDays()[dayOfWeek - 1]
-                        && dayOfWeek >= nowDay
-                        && !(dayOfWeek == nowDay && hours < nowHour)
-                        && !(dayOfWeek == nowDay && hours == nowHour && minutes <= nowMinute)) {
-                    calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+                        && (dayOfWeek+1)%7 >= nowDay
+                        && !((dayOfWeek+1)%7 == nowDay && hours < nowHour)
+                        && !((dayOfWeek+1)%7 == nowDay && hours == nowHour && minutes <= nowMinute)) {
 
+                    calendar.set(Calendar.DAY_OF_WEEK, (dayOfWeek+1)%7);
                     setAlarm(context, calendar, pendingIntent);
+                    isSet = true;
                     break;
                 }
             }
 
             //Else check if it's earlier in the week
-            for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; ++dayOfWeek) {
-                if (alarm.getDays()[dayOfWeek - 1]
-                        && dayOfWeek <= nowDay
-                        && alarm.getRepeatedWeekly()) {
-                    calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            if (!isSet) {
+                for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; ++dayOfWeek) {
+                    if (alarm.getDays()[dayOfWeek - 1]
+                            && ((dayOfWeek + 1) % 7) <= nowDay
+                            && alarm.getRepeatedWeekly()) {
+                        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+                        calendar.add(Calendar.WEEK_OF_YEAR, 1);
 
-                    setAlarm(context, calendar, pendingIntent);
-                    break;
+                        setAlarm(context, calendar, pendingIntent);
+                        break;
+                    }
                 }
             }
         }

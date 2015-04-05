@@ -2,18 +2,22 @@ package com.samples.katy.kalarm.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.os.Handler;
 
 import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
+
+import java.io.FileDescriptor;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,7 +29,8 @@ public class AlarmWakeUpActivity extends Activity {
     private PowerManager.WakeLock mWakeLock;
     private MediaPlayer mediaPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
-    private static final float HALF_OF_MAX_VOLUME = 0.6f;
+    private static final float HALF_OF_MAX_VOLUME = 0.1f;
+    private String RINGTONE = "ringtone";
 
     @InjectView(R.id.alarmTime) TextView btnAlarmTime;
     @OnClick(R.id.snooze) void snooze() {
@@ -43,12 +48,15 @@ public class AlarmWakeUpActivity extends Activity {
         this.setContentView(R.layout.alarm_pop_up_screen);
         ButterKnife.inject(this);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+
         //Play alarm tone
-        String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
+//        String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
         mediaPlayer = new MediaPlayer();
         try {
-            if (tone != null && !tone.equals("")) {
-                Uri toneUri = Uri.parse(tone);
+            if (ringtone != null && !ringtone.equals("")) {
+                Uri toneUri = Uri.parse(ringtone);
                 if (toneUri != null) {
                     mediaPlayer.setDataSource(this, toneUri);
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
