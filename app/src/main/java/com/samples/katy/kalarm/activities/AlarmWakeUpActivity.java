@@ -17,6 +17,7 @@ import android.os.Handler;
 import com.samples.katy.kalarm.utils.AlarmManager;
 import com.samples.katy.kalarm.R;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -42,6 +43,7 @@ public class AlarmWakeUpActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.alarm_pop_up_screen);
+        ButterKnife.inject(this);
 
         //Play alarm tone
         String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
