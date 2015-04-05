@@ -22,6 +22,7 @@ import com.samples.katy.kalarm.R;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -44,6 +45,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
         alarmsRepository = new AlarmsRepository(getBaseContext());
         alarmManager = new AlarmManager(alarmsRepository);
