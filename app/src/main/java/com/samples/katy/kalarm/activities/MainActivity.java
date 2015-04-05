@@ -9,14 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
-import com.melnykov.fab.FloatingActionButton;
-import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.models.POJO.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
-import com.samples.katy.kalarm.utils.AlarmManager;
+import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.dialogfragments.AlarmSetupDialogFragment;
 import com.samples.katy.kalarm.R;
 

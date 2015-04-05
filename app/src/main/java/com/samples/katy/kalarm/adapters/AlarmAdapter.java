@@ -8,9 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.models.POJO.Alarm;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
-import com.samples.katy.kalarm.utils.AlarmManager;
+import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
 
 import java.util.List;

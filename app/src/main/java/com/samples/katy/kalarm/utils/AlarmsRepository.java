@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.models.POJO.Alarm;
 
 import java.util.ArrayList;
 import java.util.List;

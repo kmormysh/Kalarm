@@ -1,10 +1,12 @@
-package com.samples.katy.kalarm.utils;
+package com.samples.katy.kalarm.models;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.samples.katy.kalarm.models.Alarm;
+import com.samples.katy.kalarm.models.POJO.Alarm;
+import com.samples.katy.kalarm.utils.AlarmService;
+import com.samples.katy.kalarm.utils.AlarmsRepository;
 
 import java.util.Calendar;
 import java.util.List;

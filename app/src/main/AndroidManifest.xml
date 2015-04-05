@@ -28,7 +28,7 @@
 
         <service android:name=".utils.AlarmService" android:enabled="true" />
 
-        <receiver android:name=".utils.AlarmManagerReceiver" />
+        <receiver android:name=".utils.AlarmReceiver" />
 
     </application>
 

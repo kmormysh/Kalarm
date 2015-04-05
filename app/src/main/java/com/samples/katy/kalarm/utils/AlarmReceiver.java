@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class AlarmManagerReceiver extends BroadcastReceiver {
+import com.samples.katy.kalarm.models.AlarmManager;
+
+public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         AlarmManager.rescheduleAlarms(context);

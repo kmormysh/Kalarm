@@ -8,13 +8,11 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 import android.os.Handler;
 
-import com.samples.katy.kalarm.utils.AlarmManager;
+import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
 
 import butterknife.ButterKnife;
