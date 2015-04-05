@@ -2,6 +2,7 @@ package com.samples.katy.kalarm.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
@@ -101,6 +102,17 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        if (item.getItemId() == R.id.action_settings) {
+            intent = new Intent(getBaseContext(), SettingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplication().startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

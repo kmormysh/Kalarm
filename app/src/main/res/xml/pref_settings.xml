@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RingtonePreference
+        android:key="ringtone"
+        android:title="@string/pref_title_ringtone"
+        android:ringtoneType="alarm"
+        android:defaultValue="content://settings/system/notification_sound" />
+
+    <CheckBoxPreference
+        android:key="vibrate"
+        android:title="@string/pref_title_vibrate"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="snooze_length"
+        android:title="@string/pref_title_snooze_length"
+        android:entries="@array/pref_snooze_length_titles"
+        android:entryValues="@array/pref_snooze_length_values"
+        android:defaultValue="15"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"/>
+
+</PreferenceScreen>
