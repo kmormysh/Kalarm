@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -21,47 +22,38 @@ import com.samples.katy.kalarm.R;
 
 import java.util.List;
 
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 
 public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener {
 
     private AlarmsRepository alarmsRepository;
     private AlarmManager alarmManager;
     private AlarmAdapter alarmAdapter;
-    private ListView alarmList;
     private List<Alarm> alarms;
+
+    @InjectView(R.id.alarm_list) ListView alarmList;
+    @OnClick(R.id.btn_setalarm) void setAlarm() {
+        AlarmSetupDialogFragment dialog = new AlarmSetupDialogFragment();
+        dialog.openForCreate(getFragmentManager(), MainActivity.this);
+        alarmList.invalidate();
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         alarmsRepository = new AlarmsRepository(getBaseContext());
-
         alarmManager = new AlarmManager(alarmsRepository);
 
-        alarmList = (ListView) findViewById(R.id.alarm_list);
-
-        FloatingActionButton button_setAlarm = (FloatingActionButton ) findViewById(R.id.btn_setalarm);
-        button_setAlarm.attachToListView(alarmList);
-        button_setAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlarmSetupDialogFragment dialog = new AlarmSetupDialogFragment();
-                dialog.openForCreate(getFragmentManager(), MainActivity.this);
-                alarmList.invalidate();
-            }
-        });
-
         alarms = alarmsRepository.getAllAlarms(false);
-
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
                 alarmsRepository, alarmManager);
 
         registerForContextMenu(alarmList);
-
         alarmList.setAdapter(alarmAdapter);
-
     }
 
     @Override
