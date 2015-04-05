@@ -29,18 +29,27 @@ public class AlarmWakeUpActivity extends Activity {
     private PowerManager.WakeLock mWakeLock;
     private MediaPlayer mediaPlayer;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
-    private static final float HALF_OF_MAX_VOLUME = 0.1f;
     private String RINGTONE = "ringtone";
+    private String VOLUME = "volume";
+    private float DEFAULT_VOLUME = 0.5f;
 
-    @InjectView(R.id.alarmTime) TextView btnAlarmTime;
-    @OnClick(R.id.snooze) void snooze() {
+    @InjectView(R.id.alarmTime)
+    TextView btnAlarmTime;
+
+    @OnClick(R.id.snooze)
+    void snooze() {
         mediaPlayer.stop();
-    };
+    }
 
-    @OnClick (R.id.dismiss) void dismiss() {
+    ;
+
+    @OnClick(R.id.dismiss)
+    void dismiss() {
         mediaPlayer.stop();
         finish();
-    };
+    }
+
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +59,19 @@ public class AlarmWakeUpActivity extends Activity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+        float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
 
         //Play alarm tone
-//        String tone =  RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
         mediaPlayer = new MediaPlayer();
         try {
-            if (ringtone != null && !ringtone.equals("")) {
-                Uri toneUri = Uri.parse(ringtone);
-                if (toneUri != null) {
-                    mediaPlayer.setDataSource(this, toneUri);
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mediaPlayer.setLooping(true);
-                    mediaPlayer.setVolume(HALF_OF_MAX_VOLUME, HALF_OF_MAX_VOLUME);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                }
+            Uri toneUri = Uri.parse(ringtone);
+            if (toneUri != null) {
+                mediaPlayer.setDataSource(this, toneUri);
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.setVolume(volume, volume);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
             }
         } catch (Exception e) {
             e.printStackTrace();
