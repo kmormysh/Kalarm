@@ -21,6 +21,8 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_volume">Volume</string>
+    <string name="pref_volume_message">Alarm volume</string>
+    <item name="volume_default" format="float" type="string">0.5</item>
 </resources>

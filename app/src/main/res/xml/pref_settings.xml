@@ -20,4 +20,10 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"/>
 
+    <net.jayschwa.android.preference.SliderPreference
+        android:key="my_slider"
+        android:title="@string/pref_title_volume"
+        android:defaultValue="@string/volume_default"
+        android:dialogMessage="@string/pref_volume_message" />
+
 </PreferenceScreen>
