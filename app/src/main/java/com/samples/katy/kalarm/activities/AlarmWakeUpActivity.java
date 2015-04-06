@@ -90,8 +90,8 @@ public class AlarmWakeUpActivity extends Activity {
             e.printStackTrace();
         }
 
-        String time = String.format("%02d:%02d", getIntent().getStringExtra(AlarmManager.HOURS),
-                getIntent().getStringExtra(AlarmManager.MINUTES));
+        String time = String.format("%02d:%02d", getIntent().getIntExtra(AlarmManager.HOURS, 0),
+                getIntent().getIntExtra(AlarmManager.MINUTES, 0));
         btnAlarmTime.setText(time);
 
         Runnable releaseWakelock = new Runnable() {

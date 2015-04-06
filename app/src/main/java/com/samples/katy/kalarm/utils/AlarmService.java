@@ -21,7 +21,6 @@ public class AlarmService extends Service {
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtras(intent);
         getApplication().startActivity(alarmIntent);
-
         AlarmManager.rescheduleAlarms(this);
 
         return super.onStartCommand(intent, flags, startId);
