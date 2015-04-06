@@ -16,7 +16,7 @@
         android:title="@string/pref_title_math_difficulty"
         android:entries="@array/pref_math_difficulty_titles"
         android:entryValues="@array/pref_math_difficulty_values"
-        android:defaultValue="30"
+        android:defaultValue="2"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
