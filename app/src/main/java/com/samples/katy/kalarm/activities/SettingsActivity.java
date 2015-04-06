@@ -36,6 +36,7 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.pref_settings);
         bindPreferenceSummaryToValue(findPreference("ringtone"));
         bindPreferenceSummaryToValue(findPreference("snooze_length"));
+        bindPreferenceSummaryToValue(findPreference("difficulty"));
     }
 
     /**
@@ -118,6 +119,7 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.pref_settings);
             bindPreferenceSummaryToValue(findPreference("ringtone"));
             bindPreferenceSummaryToValue(findPreference("snooze_length"));
+            bindPreferenceSummaryToValue(findPreference("difficulty"));
         }
     }
 

@@ -12,6 +12,15 @@
         android:defaultValue="true" />
 
     <ListPreference
+        android:key="difficulty"
+        android:title="@string/pref_title_math_difficulty"
+        android:entries="@array/pref_math_difficulty_titles"
+        android:entryValues="@array/pref_math_difficulty_values"
+        android:defaultValue="30"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <ListPreference
         android:key="snooze_length"
         android:title="@string/pref_title_snooze_length"
         android:entries="@array/pref_snooze_length_titles"
