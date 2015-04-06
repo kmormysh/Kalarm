@@ -1,12 +1,3 @@
-[submodule "SliderPreference"]
-	path = SliderPreference
-	url = https://github.com/jayschwa/AndroidSliderPreference.git
-[submodule "Sli"]
-	path = Sli
-	url = https://github.com/jayschwa/AndroidSliderPreference.git
-[submodule "libs/Sli"]
-	path = libs/Sli
-	url = https://github.com/jayschwa/AndroidSliderPreference.git
 [submodule "libs/SliderPreference"]
 	path = libs/SliderPreference
 	url = https://github.com/jayschwa/AndroidSliderPreference.git
