@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -31,7 +32,9 @@ public class AlarmWakeUpActivity extends Activity {
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
     private String RINGTONE = "ringtone";
     private String VOLUME = "volume";
+    private String VIBRATE = "vibrate";
     private float DEFAULT_VOLUME = 0.5f;
+    private Vibrator vibrator;
 
     @InjectView(R.id.alarmTime)
     TextView btnAlarmTime;
@@ -39,17 +42,15 @@ public class AlarmWakeUpActivity extends Activity {
     @OnClick(R.id.snooze)
     void snooze() {
         mediaPlayer.stop();
-    }
-
-    ;
+        vibrator.cancel();
+    };
 
     @OnClick(R.id.dismiss)
     void dismiss() {
         mediaPlayer.stop();
+        vibrator.cancel();
         finish();
-    }
-
-    ;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,10 @@ public class AlarmWakeUpActivity extends Activity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
         float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        long[] pattern = { 1000, 200, 200, 200 };
+        if (prefs.getBoolean(VIBRATE, true))
+            vibrator.vibrate(pattern, 0);
 
         //Play alarm tone
         mediaPlayer = new MediaPlayer();
