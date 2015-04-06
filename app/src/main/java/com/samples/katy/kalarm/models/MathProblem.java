@@ -38,7 +38,7 @@ public class MathProblem {
 
     private int answer;
     private String mathProblem;
-    private Stack<String> stack;
+    private Stack<String> stack = new Stack<>();
 
     public MathProblem(int difficulty) {
         mathProblem = "";
@@ -115,26 +115,33 @@ public class MathProblem {
             mathProblem += Integer.toString(result) + operator.toString()
                     + Integer.toString(denominator);
         }
+
+
     }
 
     private void solveStack() {
-        int d2 = Integer.valueOf(stack.pop());
-        int d1 = Integer.valueOf(stack.pop());
+        int integerOne;
+        int integerTwo;
 
-        for (String token : stack) {
-            if (!isOperator(token)) {
-                stack.push(token);
-            } else {
-                int result = token.compareTo(Operators.ADD.toString()) == 0 ? d1 + d2 :
-                        token.compareTo(Operators.SUBTRACT.toString()) == 0 ? d1 - d2 :
-                                token.compareTo(Operators.MULTIPLY.toString()) == 0 ? d1 * d2 :
-                                        d1 / d2;
+        Stack<String> newStack = new Stack<>();
 
-                stack.push(String.valueOf(result));
+        while (stack.size() > 0){
+            String token = stack.pop();
+            if(!isOperator(token)){
+                newStack.push(token);
+            }else{
+                integerOne = Integer.valueOf(newStack.pop());
+                integerTwo = Integer.valueOf(newStack.pop());
+                int result = token.compareTo(Operators.ADD.toString()) == 0 ? integerTwo + integerOne :
+                        token.compareTo(Operators.SUBTRACT.toString()) == 0 ? integerTwo - integerOne :
+                                token.compareTo(Operators.MULTIPLY.toString()) == 0 ? integerTwo * integerOne :
+                                        integerTwo / integerOne;
+
+                newStack.push(String.valueOf(result));
             }
         }
 
-        answer = Integer.valueOf(stack.pop());
+        answer = Integer.valueOf(newStack.pop());
     }
 
     private boolean isOperator(String token) {
