@@ -17,6 +17,7 @@ import android.os.Handler;
 
 import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
+import com.samples.katy.kalarm.models.MathProblem;
 
 import java.io.FileDescriptor;
 
@@ -33,6 +34,7 @@ public class AlarmWakeUpActivity extends Activity {
     private String RINGTONE = "ringtone";
     private String VOLUME = "volume";
     private String VIBRATE = "vibrate";
+    private String DIFFICULTY = "difficulty";
     private float DEFAULT_VOLUME = 0.5f;
     private Vibrator vibrator;
 
@@ -59,8 +61,12 @@ public class AlarmWakeUpActivity extends Activity {
         ButterKnife.inject(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
-        float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
+
+        //Set math problem
+        String difficulty = prefs.getString(DIFFICULTY, "2");
+        MathProblem mathProblem = new MathProblem(Integer.valueOf(difficulty));
+
+        //Set vibrator
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         long[] pattern = { 1000, 200, 200, 200 };
         if (prefs.getBoolean(VIBRATE, true))
@@ -68,6 +74,8 @@ public class AlarmWakeUpActivity extends Activity {
 
         //Play alarm tone
         mediaPlayer = new MediaPlayer();
+        String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+        float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
         try {
             Uri toneUri = Uri.parse(ringtone);
             if (toneUri != null) {
