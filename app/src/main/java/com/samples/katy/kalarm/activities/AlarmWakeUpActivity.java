@@ -120,11 +120,9 @@ public class AlarmWakeUpActivity extends Activity {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //Set vibrator
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        long[] pattern = {1000, 200, 200, 200};
         if (prefs.getBoolean(VIBRATE, true))
-            vibrator.vibrate(pattern, 0);
+            vibrator.vibrate(new long[]{1000, 200, 200, 200}, 0);
 
         //Play alarm tone
         mediaPlayer = new MediaPlayer();
