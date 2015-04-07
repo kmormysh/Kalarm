@@ -32,6 +32,7 @@ import com.samples.katy.kalarm.R;
 import com.samples.katy.kalarm.models.MathProblem;
 
 import java.io.FileDescriptor;
+import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -125,22 +126,9 @@ public class AlarmWakeUpActivity extends Activity {
             vibrator.vibrate(new long[]{1000, 200, 200, 200}, 0);
 
         //Play alarm tone
-        mediaPlayer = new MediaPlayer();
         String ringtone = prefs.getString(RINGTONE, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
-        float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
-        try {
-            Uri toneUri = Uri.parse(ringtone);
-            if (toneUri != null) {
-                mediaPlayer.setDataSource(this, toneUri);
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                mediaPlayer.setLooping(true);
-                mediaPlayer.setVolume(volume, volume);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (!playMediaPlayer(ringtone))
+            playMediaPlayer(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
 
         String time = String.format("%02d:%02d", getIntent().getIntExtra(AlarmManager.HOURS, 0),
                 getIntent().getIntExtra(AlarmManager.MINUTES, 0));
@@ -162,6 +150,23 @@ public class AlarmWakeUpActivity extends Activity {
         };
 
         new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
+    }
+
+    private boolean playMediaPlayer(String ringtone){
+        float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
+        Uri toneUri = Uri.parse(ringtone);
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(volume, volume);
+        try {
+            mediaPlayer.setDataSource(this, toneUri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 
