@@ -66,7 +66,7 @@ public class AlarmWakeUpActivity extends Activity {
     @OnClick(R.id.dismiss)
     void dismiss() {
         //Set math problem
-        final MathProblem mathProblem = new MathProblem(prefs.getInt(DIFFICULTY, 2));
+        final MathProblem mathProblem = new MathProblem(Integer.parseInt(prefs.getString(DIFFICULTY, "2")));
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Solve math problem");
