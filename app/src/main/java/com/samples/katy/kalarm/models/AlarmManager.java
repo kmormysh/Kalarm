@@ -86,7 +86,6 @@ public class AlarmManager {
 
     public void cancelAlarm(Context context) {
         Intent intent = new Intent(context, AlarmService.class);
-        intent.putExtra("IamCancelIntent", "yahoo");//run it once again
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         android.app.AlarmManager alarmManager = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
