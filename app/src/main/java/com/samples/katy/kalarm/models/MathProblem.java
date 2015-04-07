@@ -24,10 +24,6 @@ public class MathProblem {
         solveStack();
     }
 
-    public int getAnswer() {
-        return answer;
-    }
-
     public String getMathProblem() {
         return mathProblem;
     }
@@ -132,5 +128,9 @@ public class MathProblem {
     private boolean isOperator(String token) {
         return OP_ADD.equals(token) || OP_SUBTRACT.equals(token) ||
                 OP_DIVIDE.equals(token) || OP_MULTIPLY.equals(token);
+    }
+
+    public boolean isCorrectAnswer(int userAnswer) {
+        return answer == userAnswer;
     }
 }

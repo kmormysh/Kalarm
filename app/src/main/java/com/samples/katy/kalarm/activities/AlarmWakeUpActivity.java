@@ -95,7 +95,7 @@ public class AlarmWakeUpActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (input.getText() != null
                                 && !input.getText().toString().equals("")
-                                && Integer.parseInt(input.getText().toString()) == mathProblem.getAnswer()) {
+                                && mathProblem.isCorrectAnswer(Integer.parseInt(input.getText().toString()))) {
                             mediaPlayer.stop();
                             vibrator.cancel();
                             finish();
