@@ -1,7 +1,11 @@
 package com.samples.katy.kalarm.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -11,9 +15,17 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.text.InputType;
+import android.text.Layout;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
@@ -30,6 +42,7 @@ public class AlarmWakeUpActivity extends Activity {
     private final String TAG = this.getClass().getSimpleName();
     private PowerManager.WakeLock mWakeLock;
     private MediaPlayer mediaPlayer;
+    private SharedPreferences prefs;
     private static final int WAKELOCK_TIMEOUT = 50 * 1000;
     private String RINGTONE = "ringtone";
     private String VOLUME = "volume";
@@ -45,14 +58,60 @@ public class AlarmWakeUpActivity extends Activity {
     void snooze() {
         mediaPlayer.stop();
         vibrator.cancel();
-    };
+    }
+
+    ;
 
     @OnClick(R.id.dismiss)
     void dismiss() {
-        mediaPlayer.stop();
-        vibrator.cancel();
-        finish();
-    };
+        //Set math problem
+        String difficulty = prefs.getString(DIFFICULTY, "2");
+        final MathProblem mathProblem = new MathProblem(Integer.valueOf(difficulty));
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Solve math problem");
+        final TextView textMathProblem = new TextView(this);
+        textMathProblem.setText(mathProblem.getMathProblem() + " = ");
+        textMathProblem.setGravity(Gravity.CENTER_HORIZONTAL);
+        textMathProblem.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.text_size));
+        final EditText input = new EditText(this);
+        input.setSingleLine();
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        LinearLayout layout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2);
+        lp.setMargins(5, 10, 5, 5);
+        textMathProblem.setLayoutParams(lp);
+        lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        lp.setMargins(5, 10, 5, 5);
+        input.setLayoutParams(lp);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        layout.addView(textMathProblem);
+        layout.addView(input);
+        alertDialog.setView(layout);
+
+        alertDialog.setPositiveButton("Dismiss",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (input.getText() != null
+                                && !input.getText().toString().equals("")
+                                && Integer.parseInt(input.getText().toString()) == mathProblem.getAnswer()) {
+                            mediaPlayer.stop();
+                            vibrator.cancel();
+                            finish();
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Wrong answer! Try again", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +119,11 @@ public class AlarmWakeUpActivity extends Activity {
         this.setContentView(R.layout.alarm_pop_up_screen);
         ButterKnife.inject(this);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //Set math problem
-        String difficulty = prefs.getString(DIFFICULTY, "2");
-        MathProblem mathProblem = new MathProblem(Integer.valueOf(difficulty));
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Set vibrator
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        long[] pattern = { 1000, 200, 200, 200 };
+        long[] pattern = {1000, 200, 200, 200};
         if (prefs.getBoolean(VIBRATE, true))
             vibrator.vibrate(pattern, 0);
 
