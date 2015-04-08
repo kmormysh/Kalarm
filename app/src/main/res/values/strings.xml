@@ -17,6 +17,7 @@
     <string name="friday">FRI</string>
     <string name="saturday">SAT</string>
     <string name="sunday">SUN</string>
+    <string name="app_id">449689075205111</string>
 
     <declare-styleable name="com.mnm.seekbarpreference.SeekBarPreference">
         <attr name="minValue" format="integer" />

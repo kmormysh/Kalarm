@@ -15,18 +15,58 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.facebook.model.GraphUser;
 import com.samples.katy.kalarm.R;
+import com.samples.katy.kalarm.dialogfragments.FacebookService;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class SettingsActivity extends PreferenceActivity {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+
+    @InjectView(R.id.login_text)
+    TextView loginText;
+    @InjectView(R.id.fb_username)
+    TextView fbUserName;
+    @InjectView(R.id.fb_login)
+    ImageButton fb_login;
+    @InjectView(R.id.successful_login)
+    LinearLayout logoutLayout;
+
+    @OnClick(R.id.fb_logout)
+    void logout() {
+        facebookService.logout();
+    }
+
+    @OnClick(R.id.fb_login)
+    void fbLogin() {
+        facebookService = new FacebookService();
+        facebookService.login(this);
+        addLogoutToLayout();
+    }
+
+    private static FacebookService facebookService;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setupSimplePreferencesScreen();
+        setContentView(R.layout.pref_fb_login);
+        ButterKnife.inject(this);
     }
 
     private void setupSimplePreferencesScreen() {
@@ -123,4 +163,17 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
+    private void addLogoutToLayout() {
+        GraphUser user = facebookService.getGraphUser();
+        if (user != null) {
+            fbUserName.setText(user.getFirstName() + " " + user.getLastName());
+            fb_login.setVisibility(View.INVISIBLE);
+            logoutLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            fb_login.setVisibility(View.VISIBLE);
+            logoutLayout.setVisibility(View.INVISIBLE);
+            facebookService.logout();
+        }
+    }
 }
