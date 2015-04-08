@@ -2,6 +2,7 @@ package com.samples.katy.kalarm.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -20,9 +21,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.model.GraphUser;
 import com.samples.katy.kalarm.R;
-import com.samples.katy.kalarm.dialogfragments.FacebookService;
+import com.samples.katy.kalarm.utils.FacebookService;
+import com.samples.katy.kalarm.models.pojo.SocialUser;
+import com.samples.katy.kalarm.utils.SocialNetworkService;
 
 import java.util.List;
 
@@ -30,8 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements SocialNetworkService.LoginCompletedListener {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private SharedPreferences sharedPreferences;
 
     @InjectView(R.id.login_text)
     TextView loginText;
@@ -45,12 +48,14 @@ public class SettingsActivity extends PreferenceActivity {
     @OnClick(R.id.fb_logout)
     void logout() {
         facebookService.logout();
+        addLogoutToLayout();
     }
 
     @OnClick(R.id.fb_login)
     void fbLogin() {
         facebookService = new FacebookService();
-        facebookService.login(this);
+        facebookService.login(this, this);
+
         addLogoutToLayout();
     }
 
@@ -67,6 +72,8 @@ public class SettingsActivity extends PreferenceActivity {
         setupSimplePreferencesScreen();
         setContentView(R.layout.pref_fb_login);
         ButterKnife.inject(this);
+
+        addLogoutToLayout();
     }
 
     private void setupSimplePreferencesScreen() {
@@ -151,6 +158,19 @@ public class SettingsActivity extends PreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    @Override
+    public void onComplete(SocialUser user) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString("userId", user.getUserId());
+        editor.putString("userName", user.getUserName());
+        editor.commit();
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
         @Override
@@ -164,16 +184,18 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     private void addLogoutToLayout() {
-        GraphUser user = facebookService.getGraphUser();
-        if (user != null) {
-            fbUserName.setText(user.getFirstName() + " " + user.getLastName());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userName = sharedPreferences.getString("userName", "");
+        if (!userName.equals("")) {
+            fbUserName.setText(userName);
             fb_login.setVisibility(View.INVISIBLE);
             logoutLayout.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
+            sharedPreferences.edit().remove("userName");
+            sharedPreferences.edit().remove("userId");
+            sharedPreferences.edit().commit();
             fb_login.setVisibility(View.VISIBLE);
             logoutLayout.setVisibility(View.INVISIBLE);
-            facebookService.logout();
         }
     }
 }
