@@ -34,24 +34,30 @@
         android:scaleType="centerCrop"
         android:src="@drawable/fb" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/successful_login"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/fb_username"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/fb_logout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Logout"
-            android:background="?android:attr/selectableItemBackground" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:autoLink="all"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="Logout" />
+    </RelativeLayout>
 
 </LinearLayout>

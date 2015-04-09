@@ -1,50 +1,86 @@
 package com.samples.katy.kalarm.utils;
 
 import android.app.Activity;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.util.Base64;
-import android.util.Log;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.samples.katy.kalarm.models.pojo.SocialUser;
 
-import java.security.MessageDigest;
+import java.util.Arrays;
 
-public class FacebookService implements Session.StatusCallback, Request.GraphUserCallback {
+public class FacebookService implements FacebookCallback<LoginResult>, SocialNetworkService {
 
-    private SocialNetworkService.LoginCompletedListener loginCompletedListener;
+    private CallbackManager callbackManager;
+    private ProfileTracker profileTracker;
+    private SocialUser socialUser;
+    private LoginManager loginManager;
+    private LoginCompletedListener loginCompletedListener;
 
-    public void login(Activity activity, SocialNetworkService.LoginCompletedListener listener) {
-
-        this.loginCompletedListener = listener;
-        Session session = Session.openActiveSessionFromCache(activity);
-        if (session == null) {
-            Session.openActiveSession(activity, true, this);
-        }
-    }
-
+    @Override
     public void logout() {
-        this.call(Session.getActiveSession(), SessionState.CLOSED, new Exception());
+        loginManager.logOut();
+        socialUser = new SocialUser();
     }
 
     @Override
-    public void call(Session session, SessionState sessionState, Exception e) {
-        if (session.isOpened()) {
-            Request.executeMeRequestAsync(session, this);
-        } else {
-            session.closeAndClearTokenInformation();
-            session.close();
+    public void login(Activity activity, LoginCompletedListener newProfileListener) {
+        this.loginCompletedListener = newProfileListener;
+        loginManager.logInWithReadPermissions(activity, Arrays.asList("public_profile"));
+    }
+
+    public FacebookService(Activity activity) {
+        socialUser = new SocialUser();
+        FacebookSdk.sdkInitialize(activity);
+        callbackManager = CallbackManager.Factory.create();
+        loginManager = LoginManager.getInstance();
+        loginManager.registerCallback(callbackManager, this);
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                if (profile2 != null) {
+                    handleNewProfile(profile2);
+                } else {
+                    socialUser = new SocialUser();
+                }
+            }
+        };
+    }
+
+    public CallbackManager getCallbackManager() {
+        return this.callbackManager;
+    }
+
+    public ProfileTracker getProfileTracker() {
+        return this.profileTracker;
+    }
+
+    private void handleNewProfile(Profile profile) {
+        socialUser.setUserId(profile.getId());
+        socialUser.setUserName(profile.getName());
+        if (this.loginCompletedListener != null) {
+            this.loginCompletedListener.onComplete(socialUser);
         }
     }
 
     @Override
-    public void onCompleted(GraphUser graphUser, Response response) {
-        this.loginCompletedListener.onComplete(new SocialUser(graphUser.getName(), graphUser.getId()));
+    public void onSuccess(LoginResult loginResult) {
+        Profile currentProfile = Profile.getCurrentProfile();
+        if (currentProfile != null) {
+            handleNewProfile(currentProfile);
+        }
+    }
+
+    @Override
+    public void onCancel() { }
+
+    @Override
+    public void onError(FacebookException e) {
+        this.loginCompletedListener.onError();
     }
 }

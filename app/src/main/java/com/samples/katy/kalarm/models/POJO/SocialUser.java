@@ -4,6 +4,8 @@ public class SocialUser {
     private String userName;
     private String userId;
 
+    public SocialUser() {}
+
     public SocialUser(String userName, String userId) {
         this.userName = userName;
         this.userId = userId;

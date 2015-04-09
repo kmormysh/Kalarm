@@ -2,6 +2,7 @@ package com.samples.katy.kalarm.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -19,7 +20,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.samples.katy.kalarm.R;
 import com.samples.katy.kalarm.utils.FacebookService;
@@ -35,6 +38,7 @@ import butterknife.OnClick;
 public class SettingsActivity extends PreferenceActivity implements SocialNetworkService.LoginCompletedListener {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     private SharedPreferences sharedPreferences;
+    private static FacebookService facebookService;
 
     @InjectView(R.id.login_text)
     TextView loginText;
@@ -43,23 +47,22 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
     @InjectView(R.id.fb_login)
     ImageButton fb_login;
     @InjectView(R.id.successful_login)
-    LinearLayout logoutLayout;
+    RelativeLayout logoutLayout;
 
     @OnClick(R.id.fb_logout)
-    void logout() {
+    void fbLogout() {
         facebookService.logout();
-        addLogoutToLayout();
+        sharedPreferences.edit().remove("userName");
+        sharedPreferences.edit().remove("userId");
+        sharedPreferences.edit().commit();
+        fb_login.setVisibility(View.VISIBLE);
+        logoutLayout.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.fb_login)
     void fbLogin() {
-        facebookService = new FacebookService();
         facebookService.login(this, this);
-
-        addLogoutToLayout();
     }
-
-    private static FacebookService facebookService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,26 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
         setContentView(R.layout.pref_fb_login);
         ButterKnife.inject(this);
 
-        addLogoutToLayout();
+        facebookService = new FacebookService(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getString("userId", "").equals("")){
+            fbUserName.setText(sharedPreferences.getString("userName", ""));
+            fb_login.setVisibility(View.GONE);
+            logoutLayout.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        facebookService.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        facebookService.getProfileTracker().stopTracking();
     }
 
     private void setupSimplePreferencesScreen() {
@@ -159,16 +181,19 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
     }
 
     @Override
-    public void onComplete(SocialUser user) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString("userId", user.getUserId());
-        editor.putString("userName", user.getUserName());
-        editor.commit();
+    public void onError() {
+        Toast.makeText(this, "Something went wrong :(", Toast.LENGTH_SHORT ).show();
     }
 
     @Override
-    public void onError() {
-
+    public void onComplete(SocialUser socialUser) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreferences.edit().putString("userId", socialUser.getUserId());
+        sharedPreferences.edit().putString("userName", socialUser.getUserName());
+        sharedPreferences.edit().commit();
+        fbUserName.setText(socialUser.getUserName());
+        fb_login.setVisibility(View.GONE);
+        logoutLayout.setVisibility(View.VISIBLE);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -180,22 +205,6 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
             bindPreferenceSummaryToValue(findPreference("ringtone"));
             bindPreferenceSummaryToValue(findPreference("snooze_length"));
             bindPreferenceSummaryToValue(findPreference("difficulty"));
-        }
-    }
-
-    private void addLogoutToLayout() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String userName = sharedPreferences.getString("userName", "");
-        if (!userName.equals("")) {
-            fbUserName.setText(userName);
-            fb_login.setVisibility(View.INVISIBLE);
-            logoutLayout.setVisibility(View.VISIBLE);
-        } else {
-            sharedPreferences.edit().remove("userName");
-            sharedPreferences.edit().remove("userId");
-            sharedPreferences.edit().commit();
-            fb_login.setVisibility(View.VISIBLE);
-            logoutLayout.setVisibility(View.INVISIBLE);
         }
     }
 }
