@@ -18,6 +18,7 @@
     <string name="saturday">SAT</string>
     <string name="sunday">SUN</string>
     <string name="app_id">449689075205111</string>
+    <string name="facebook_auth_failed_text">Something went wrong :(</string>
 
     <declare-styleable name="com.mnm.seekbarpreference.SeekBarPreference">
         <attr name="minValue" format="integer" />

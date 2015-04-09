@@ -1,6 +1,8 @@
 package com.samples.katy.kalarm.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -10,6 +12,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.samples.katy.kalarm.models.SocialNetworkService;
 import com.samples.katy.kalarm.models.pojo.SocialUser;
 
 import java.util.Arrays;
@@ -22,21 +25,9 @@ public class FacebookService implements FacebookCallback<LoginResult>, SocialNet
     private LoginManager loginManager;
     private LoginCompletedListener loginCompletedListener;
 
-    @Override
-    public void logout() {
-        loginManager.logOut();
+    public FacebookService(Context context) {
         socialUser = new SocialUser();
-    }
-
-    @Override
-    public void login(Activity activity, LoginCompletedListener newProfileListener) {
-        this.loginCompletedListener = newProfileListener;
-        loginManager.logInWithReadPermissions(activity, Arrays.asList("public_profile"));
-    }
-
-    public FacebookService(Activity activity) {
-        socialUser = new SocialUser();
-        FacebookSdk.sdkInitialize(activity);
+        FacebookSdk.sdkInitialize(context);
         callbackManager = CallbackManager.Factory.create();
         loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, this);
@@ -52,20 +43,15 @@ public class FacebookService implements FacebookCallback<LoginResult>, SocialNet
         };
     }
 
-    public CallbackManager getCallbackManager() {
-        return this.callbackManager;
+    @Override
+    public void logout() {
+        loginManager.logOut();
     }
 
-    public ProfileTracker getProfileTracker() {
-        return this.profileTracker;
-    }
-
-    private void handleNewProfile(Profile profile) {
-        socialUser.setUserId(profile.getId());
-        socialUser.setUserName(profile.getName());
-        if (this.loginCompletedListener != null) {
-            this.loginCompletedListener.onComplete(socialUser);
-        }
+    @Override
+    public void login(Activity activity, LoginCompletedListener newProfileListener) {
+        this.loginCompletedListener = newProfileListener;
+        loginManager.logInWithReadPermissions(activity, Arrays.asList("public_profile"));
     }
 
     @Override
@@ -77,10 +63,29 @@ public class FacebookService implements FacebookCallback<LoginResult>, SocialNet
     }
 
     @Override
-    public void onCancel() { }
+    public void onCancel() {
+    }
 
     @Override
     public void onError(FacebookException e) {
-        this.loginCompletedListener.onError();
+        if (this.loginCompletedListener != null) {
+            this.loginCompletedListener.onError();
+        }
+    }
+
+    public void handleOnActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode,resultCode,data);
+    }
+
+    public void handleOnActivityDestroy(){
+        profileTracker.stopTracking();
+    }
+
+    private void handleNewProfile(Profile profile) {
+        socialUser.setUserId(profile.getId());
+        socialUser.setUserName(profile.getName());
+        if (this.loginCompletedListener != null) {
+            this.loginCompletedListener.onComplete(socialUser);
+        }
     }
 }

@@ -1,6 +1,7 @@
-package com.samples.katy.kalarm.utils;
+package com.samples.katy.kalarm.models;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.samples.katy.kalarm.models.pojo.SocialUser;
 

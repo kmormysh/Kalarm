@@ -23,8 +23,7 @@
         android:layout_margin="5sp"
         android:height="130sp"
         android:text="Snooze"
-        android:textSize="32dp"
-        android:background="@android:drawable/toast_frame" />
+        android:textSize="32dp" />
 
     <Button
         android:id="@+id/dismiss"
@@ -34,7 +33,6 @@
         android:layout_margin="5sp"
         android:height="80sp"
         android:text="Dismiss"
-        android:textSize="32dp"
-        android:background="@android:drawable/toast_frame" />
+        android:textSize="32dp" />
 
 </RelativeLayout>

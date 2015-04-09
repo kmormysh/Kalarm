@@ -19,15 +19,15 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.samples.katy.kalarm.R;
-import com.samples.katy.kalarm.utils.FacebookService;
+import com.samples.katy.kalarm.models.SocialNetworkService;
+import com.samples.katy.kalarm.models.SocialServiceFactory;
 import com.samples.katy.kalarm.models.pojo.SocialUser;
-import com.samples.katy.kalarm.utils.SocialNetworkService;
+import com.samples.katy.kalarm.utils.FacebookService;
 
 import java.util.List;
 
@@ -38,7 +38,9 @@ import butterknife.OnClick;
 public class SettingsActivity extends PreferenceActivity implements SocialNetworkService.LoginCompletedListener {
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     private SharedPreferences sharedPreferences;
-    private static FacebookService facebookService;
+    private static SocialNetworkService socialNetworkService;
+    private static final String SETTINGS_KEY_USER_ID = "userId";
+    private static final String SETTINGS_KEY_USER_NAME = "userName";
 
     @InjectView(R.id.login_text)
     TextView loginText;
@@ -50,18 +52,19 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
     RelativeLayout logoutLayout;
 
     @OnClick(R.id.fb_logout)
-    void fbLogout() {
-        facebookService.logout();
-        sharedPreferences.edit().remove("userName");
-        sharedPreferences.edit().remove("userId");
-        sharedPreferences.edit().commit();
-        fb_login.setVisibility(View.VISIBLE);
-        logoutLayout.setVisibility(View.GONE);
+    void fbLogoutClick() {
+        goToNotAuthenticatedUserState();
+        SocialServiceFactory.Create(this, SocialServiceFactory.SocialNetworkType.FACEBOOK).logout();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(SETTINGS_KEY_USER_NAME);
+        editor.remove(SETTINGS_KEY_USER_ID);
+        editor.commit();
     }
 
     @OnClick(R.id.fb_login)
-    void fbLogin() {
-        facebookService.login(this, this);
+    void fbLoginClick() {
+        socialNetworkService = SocialServiceFactory.Create(this, SocialServiceFactory.SocialNetworkType.FACEBOOK);
+        socialNetworkService.login(this, this);
     }
 
     @Override
@@ -76,26 +79,28 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
         setContentView(R.layout.pref_fb_login);
         ButterKnife.inject(this);
 
-        facebookService = new FacebookService(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.getString("userId", "").equals("")){
-            fbUserName.setText(sharedPreferences.getString("userName", ""));
-            fb_login.setVisibility(View.GONE);
-            logoutLayout.setVisibility(View.VISIBLE);
+        if (!sharedPreferences.getString(SETTINGS_KEY_USER_ID, "").equals("")) {
+            goToAuthenticatedUserState(sharedPreferences.getString(SETTINGS_KEY_USER_NAME, ""));
+        } else {
+            goToNotAuthenticatedUserState();
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        facebookService.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        //TODO: create an event for onActivityResult and remove this explicit cast
+        if (socialNetworkService instanceof FacebookService)
+            ((FacebookService) socialNetworkService).handleOnActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        facebookService.getProfileTracker().stopTracking();
+        //TODO: create an event for onDestroy and remove this explicit cast
+        if (socialNetworkService instanceof FacebookService)
+            ((FacebookService) socialNetworkService).handleOnActivityDestroy();
     }
 
     private void setupSimplePreferencesScreen() {
@@ -126,6 +131,18 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
                 || !isXLargeTablet(context);
     }
+
+    private void goToAuthenticatedUserState(String name) {
+        fbUserName.setText(name);
+        fb_login.setVisibility(View.GONE);
+        logoutLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void goToNotAuthenticatedUserState() {
+        fb_login.setVisibility(View.VISIBLE);
+        logoutLayout.setVisibility(View.GONE);
+    }
+
 
     /**
      * {@inheritDoc}
@@ -182,18 +199,16 @@ public class SettingsActivity extends PreferenceActivity implements SocialNetwor
 
     @Override
     public void onError() {
-        Toast.makeText(this, "Something went wrong :(", Toast.LENGTH_SHORT ).show();
+        Toast.makeText(this, getString(R.string.facebook_auth_failed_text), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onComplete(SocialUser socialUser) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        sharedPreferences.edit().putString("userId", socialUser.getUserId());
-        sharedPreferences.edit().putString("userName", socialUser.getUserName());
-        sharedPreferences.edit().commit();
-        fbUserName.setText(socialUser.getUserName());
-        fb_login.setVisibility(View.GONE);
-        logoutLayout.setVisibility(View.VISIBLE);
+        editor.putString(SETTINGS_KEY_USER_ID, socialUser.getUserId());
+        editor.putString(SETTINGS_KEY_USER_NAME, socialUser.getUserName());
+        editor.commit();
+        goToAuthenticatedUserState(socialUser.getUserName());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
