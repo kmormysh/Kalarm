@@ -51,30 +51,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
 
         callback.onCreate();
     }
-//
-//    public Alarm getAlarm(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String[] keys = {KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS, KET_MINUTES, KEY_REPEAT, KEY_ENABLE};
-//
-//        Cursor cursor = db.query(TABLE_ALARMS,
-//                keys,
-//                KEY_ID + "=?",
-//                new String[]{String.valueOf(id)},
-//                null, null, null, null);
-//
-//        cursor.moveToFirst();
-//
-//        Alarm alarm = new Alarm(cursor.getInt(cursor.getColumnIndex(KEY_ID)),
-//                cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
-//                cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
-//                cursor.getString(cursor.getColumnIndex(KEY_NAME)),
-//                convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
-//                cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
-//                cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
-//        cursor.close();
-//
-//        return alarm;
-//    }
 
     public void getAlarm(int id, GetAlarmsCallback callback) {
         getAlarmsCallback = callback;
@@ -100,36 +76,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
 
         callback.onGotAlarm(alarm);
     }
-
-//    public List<Alarm> getAllAlarms(boolean onlyEnabled) {
-//        List<Alarm> alarmList = new ArrayList<>();
-//
-//        String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
-//
-//        if (onlyEnabled)
-//            selectQuery += " WHERE " + KEY_ENABLE + " > 0 ";
-//
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//
-//        if (cursor.moveToFirst()) {
-//            do {
-//                Alarm alarm = new Alarm(
-//                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
-//                        cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
-//                        cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
-//                        cursor.getString(cursor.getColumnIndex(KEY_NAME)),
-//                        convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
-//                        cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
-//                        cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
-//
-//                alarmList.add(alarm);
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//
-//        return alarmList;
-//    }
 
     public void getAllAlarms(boolean onlyEnabled, GetAlarmsCallback callback) {
         getAlarmsCallback = callback;
@@ -163,22 +109,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         getAlarmsCallback.onGotAllAlarms(alarmList);
     }
 
-//    public int updateAlarm(Alarm alarm) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(KEY_ID, alarm.getId());
-//        values.put(KEY_NAME, alarm.getAlarmName());
-//        values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
-//        values.put(KEY_HOURS, alarm.getAlarmHours());
-//        values.put(KET_MINUTES, alarm.getAlarmMinutes());
-//        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
-//        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
-//
-//        return db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
-//                new String[]{String.valueOf(alarm.getId())});
-//    }
-
     public void updateAlarm(Alarm alarm, UpdateCallback callback){
         this.updateCallback = callback;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -196,13 +126,6 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 new String[]{String.valueOf(alarm.getId())}));
 
     }
-//
-//    public void deleteAlarm(Alarm alarm) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(TABLE_ALARMS, KEY_ID + " = ?", new String[]{String.valueOf(alarm.getId())});
-//
-//        db.close();
-//    }
 
     public void deleteAlarm(Alarm alarmToDelete, DeleteCallback callback){
         this.deleteCallback = callback;
