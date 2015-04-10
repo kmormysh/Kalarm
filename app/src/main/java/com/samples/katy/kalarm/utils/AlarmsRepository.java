@@ -24,11 +24,17 @@ public class AlarmsRepository extends SQLiteOpenHelper {
     private static final String KEY_REPEAT = "repeat";
     private static final String KEY_ENABLE = "enable";
 
+    private GetAlarmsCallback getAlarmsCallback;
+    private UpdateCallback updateCallback;
+    private DeleteCallback deleteCallback;
+    public CreateAlarmCallback createAlarmCallback;
+
     public AlarmsRepository(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void addAlarm(Alarm alarm) {
+    public void addAlarm(Alarm alarm, CreateAlarmCallback callback) {
+        this.createAlarmCallback = callback;
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -42,9 +48,36 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         db.insert(TABLE_ALARMS, null, values);
 
         db.close();
-    }
 
-    public Alarm getAlarm(int id) {
+        callback.onCreate();
+    }
+//
+//    public Alarm getAlarm(int id) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] keys = {KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS, KET_MINUTES, KEY_REPEAT, KEY_ENABLE};
+//
+//        Cursor cursor = db.query(TABLE_ALARMS,
+//                keys,
+//                KEY_ID + "=?",
+//                new String[]{String.valueOf(id)},
+//                null, null, null, null);
+//
+//        cursor.moveToFirst();
+//
+//        Alarm alarm = new Alarm(cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+//                cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
+//                cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
+//                cursor.getString(cursor.getColumnIndex(KEY_NAME)),
+//                convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+//                cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
+//                cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
+//        cursor.close();
+//
+//        return alarm;
+//    }
+
+    public void getAlarm(int id, GetAlarmsCallback callback) {
+        getAlarmsCallback = callback;
         SQLiteDatabase db = this.getReadableDatabase();
         String[] keys = {KEY_ID, KEY_NAME, KEY_DAY, KEY_HOURS, KET_MINUTES, KEY_REPEAT, KEY_ENABLE};
 
@@ -65,10 +98,42 @@ public class AlarmsRepository extends SQLiteOpenHelper {
                 cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
         cursor.close();
 
-        return alarm;
+        callback.onGotAlarm(alarm);
     }
 
-    public List<Alarm> getAllAlarms(boolean onlyEnabled) {
+//    public List<Alarm> getAllAlarms(boolean onlyEnabled) {
+//        List<Alarm> alarmList = new ArrayList<>();
+//
+//        String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
+//
+//        if (onlyEnabled)
+//            selectQuery += " WHERE " + KEY_ENABLE + " > 0 ";
+//
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                Alarm alarm = new Alarm(
+//                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+//                        cursor.getInt(cursor.getColumnIndex(KEY_HOURS)),
+//                        cursor.getInt(cursor.getColumnIndex(KET_MINUTES)),
+//                        cursor.getString(cursor.getColumnIndex(KEY_NAME)),
+//                        convertDaysStringToInt(cursor.getString(cursor.getColumnIndex(KEY_DAY))),
+//                        cursor.getInt(cursor.getColumnIndex(KEY_REPEAT)) > 0,
+//                        cursor.getInt(cursor.getColumnIndex(KEY_ENABLE)) > 0);
+//
+//                alarmList.add(alarm);
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//
+//        return alarmList;
+//    }
+
+    public void getAllAlarms(boolean onlyEnabled, GetAlarmsCallback callback) {
+        getAlarmsCallback = callback;
+
         List<Alarm> alarmList = new ArrayList<>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_ALARMS;
@@ -95,10 +160,27 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        return alarmList;
+        getAlarmsCallback.onGotAllAlarms(alarmList);
     }
 
-    public int updateAlarm(Alarm alarm) {
+//    public int updateAlarm(Alarm alarm) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        ContentValues values = new ContentValues();
+//        values.put(KEY_ID, alarm.getId());
+//        values.put(KEY_NAME, alarm.getAlarmName());
+//        values.put(KEY_DAY, convertDaysIntToString(alarm.getDays()));
+//        values.put(KEY_HOURS, alarm.getAlarmHours());
+//        values.put(KET_MINUTES, alarm.getAlarmMinutes());
+//        values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
+//        values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
+//
+//        return db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
+//                new String[]{String.valueOf(alarm.getId())});
+//    }
+
+    public void updateAlarm(Alarm alarm, UpdateCallback callback){
+        this.updateCallback = callback;
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -110,22 +192,34 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
         values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
 
-        return db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarm.getId())});
-    }
+        this.updateCallback.onUpdate(db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(alarm.getId())}));
 
-    public void deleteAlarm(Alarm alarm) {
+    }
+//
+//    public void deleteAlarm(Alarm alarm) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.delete(TABLE_ALARMS, KEY_ID + " = ?", new String[]{String.valueOf(alarm.getId())});
+//
+//        db.close();
+//    }
+
+    public void deleteAlarm(Alarm alarmToDelete, DeleteCallback callback){
+        this.deleteCallback = callback;
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ALARMS, KEY_ID + " = ?", new String[]{String.valueOf(alarm.getId())});
+        db.delete(TABLE_ALARMS, KEY_ID + " = ?", new String[]{String.valueOf(alarmToDelete.getId())});
 
         db.close();
+        this.deleteCallback.onDelete();
     }
 
-    public void deleteAll() {
+    public void deleteAll(DeleteCallback callback) {
+        this.deleteCallback = callback;
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ALARMS, null, null);
 
         db.close();
+        this.deleteCallback.onDelete();
     }
 
     @Override
@@ -167,5 +261,22 @@ public class AlarmsRepository extends SQLiteOpenHelper {
             }
         }
         return parsedDays;
+    }
+
+    public interface CreateAlarmCallback {
+        void onCreate();
+    }
+
+    public interface GetAlarmsCallback {
+        void onGotAllAlarms(List<Alarm> alarm);
+        void onGotAlarm(Alarm alarm);
+    }
+
+    public interface UpdateCallback {
+        void onUpdate(int updateSuccessful);
+    }
+
+    public interface DeleteCallback {
+        void onDelete();
     }
 }

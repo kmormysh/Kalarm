@@ -8,14 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.samples.katy.kalarm.R;
+import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.models.pojo.Alarm;
 import com.samples.katy.kalarm.utils.AlarmsRepository;
-import com.samples.katy.kalarm.models.AlarmManager;
-import com.samples.katy.kalarm.R;
 
 import java.util.List;
 
-public class AlarmAdapter extends BaseAdapter {
+public class AlarmAdapter extends BaseAdapter implements AlarmsRepository.GetAlarmsCallback {
     private LayoutInflater layoutInflater;
     private List<Alarm> alarmList;
     private AlarmsRepository alarmsRepository;
@@ -68,7 +68,12 @@ public class AlarmAdapter extends BaseAdapter {
                 Alarm newAlarm = getAlarm(pos);
 
                 newAlarm.setIsEnabled(alarmSwitch.isChecked());
-                alarmsRepository.updateAlarm(newAlarm);
+                alarmsRepository.updateAlarm(newAlarm, new AlarmsRepository.UpdateCallback() {
+                    @Override
+                    public void onUpdate(int updateSuccessful) {
+
+                    }
+                });
                 alarmManager.rescheduleAlarms(context);
 
                 notifyDataSetChanged();
@@ -89,7 +94,7 @@ public class AlarmAdapter extends BaseAdapter {
     }
 
     public void getAlarmList() {
-        alarmList = alarmsRepository.getAllAlarms(false);
+        alarmsRepository.getAllAlarms(false, this);
     }
 
     private String convertDaysIntToString(boolean[] days, Context context) {
@@ -102,5 +107,15 @@ public class AlarmAdapter extends BaseAdapter {
             }
         }
         return result;
+    }
+
+    @Override
+    public void onGotAlarm(Alarm alarm) {
+
+    }
+
+    @Override
+    public void onGotAllAlarms(List<Alarm> alarm) {
+        alarmList = alarm;
     }
 }

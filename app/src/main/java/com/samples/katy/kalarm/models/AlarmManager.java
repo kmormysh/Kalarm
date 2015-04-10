@@ -11,12 +11,13 @@ import com.samples.katy.kalarm.utils.AlarmsRepository;
 import java.util.Calendar;
 import java.util.List;
 
-public class AlarmManager {
+public class AlarmManager implements AlarmsRepository.GetAlarmsCallback {
 
     final public static String HOURS = "hours";
     final public static String MINUTES = "minutes";
 
     private AlarmsRepository alarmsRepository;
+    private List<Alarm> alarms;
 
     public static void rescheduleAlarms(Context context) {
         new AlarmManager(new AlarmsRepository(context)).reschedule(context);
@@ -29,7 +30,7 @@ public class AlarmManager {
     public void reschedule (Context context){
         cancelAlarms(context);
 
-        List<Alarm> alarms = alarmsRepository.getAllAlarms(true);
+        alarmsRepository.getAllAlarms(true, this);
 
         for (Alarm alarm : alarms) {
             PendingIntent pendingIntent = createPendingIntent(context, alarm);
@@ -101,7 +102,7 @@ public class AlarmManager {
 
     public void cancelAlarms(Context context) {
 
-        List<Alarm> alarms = alarmsRepository.getAllAlarms(false);
+        alarmsRepository.getAllAlarms(false, this);
 
         if (alarms != null) {
             for (Alarm alarm : alarms) {
@@ -113,5 +114,15 @@ public class AlarmManager {
                 }
             }
         }
+    }
+
+    @Override
+    public void onGotAllAlarms(List<Alarm> alarm) {
+        alarms = alarm;
+    }
+
+    @Override
+    public void onGotAlarm(Alarm alarm) {
+
     }
 }

@@ -26,7 +26,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener {
+public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener, AlarmsRepository.UpdateCallback, AlarmsRepository.DeleteCallback, AlarmsRepository.GetAlarmsCallback, AlarmsRepository.CreateAlarmCallback {
 
     private AlarmsRepository alarmsRepository;
     private AlarmManager alarmManager;
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
         alarmsRepository = new AlarmsRepository(getBaseContext());
         alarmManager = new AlarmManager(alarmsRepository);
 
-        alarms = alarmsRepository.getAllAlarms(false);
+        alarmsRepository.getAllAlarms(false, this);
         alarmAdapter = new AlarmAdapter(getBaseContext(), alarms,
                 alarmsRepository, alarmManager);
 
@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        alarms = alarmsRepository.getAllAlarms(false);
+        alarmsRepository.getAllAlarms(false, this);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
         String[] menuItems = getResources().getStringArray(R.array.menu);
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
         }
         if (menuItemName.equals(menuItems[1])) { //Delete
             alarmManager.cancelAlarm(this);
-            alarmsRepository.deleteAlarm(alarm);
+            alarmsRepository.deleteAlarm(alarm, this);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
     public void onCloseCreate(boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
         Alarm newAlarm = new Alarm(0, hours, minutes, name, days, isRepeat, false);
         if (newAlarm.isAtLeastOneDaySelected()) {
-            alarmsRepository.addAlarm(newAlarm);
+            alarmsRepository.addAlarm(newAlarm, this);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
@@ -127,17 +127,37 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
 
     @Override
     public void onCloseUpdate(int alarm_id, boolean[] days, int hours, int minutes, String name, boolean isRepeat) {
-        Alarm updateAlarm = alarmsRepository.getAlarm(alarm_id);
-        updateAlarm.setAlarmName(name);
-        updateAlarm.setAlarmHours(hours);
-        updateAlarm.setAlarmMinutes(minutes);
-        updateAlarm.setDays(days);
-        updateAlarm.setRepeatedWeekly(isRepeat);
+        Alarm updateAlarm = new Alarm(alarm_id, hours, minutes, name, days, isRepeat, false);
+//        alarmsRepository.getAlarm(alarm_id, this);
         if (updateAlarm.isAtLeastOneDaySelected()) {
-            alarmsRepository.updateAlarm(updateAlarm);
+            alarmsRepository.updateAlarm(updateAlarm, this);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
     }
 
+    @Override
+    public void onGotAllAlarms(List<Alarm> alarm) {
+        this.alarms = alarm;
+    }
+
+    @Override
+    public void onGotAlarm(Alarm alarm) {
+
+    }
+
+    @Override
+    public void onUpdate(int updateSuccessful) {
+
+    }
+
+    @Override
+    public void onDelete() {
+
+    }
+
+    @Override
+    public void onCreate() {
+
+    }
 }
