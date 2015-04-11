@@ -68,12 +68,7 @@ public class AlarmAdapter extends BaseAdapter implements AlarmsRepository.GetAla
                 Alarm newAlarm = getAlarm(pos);
 
                 newAlarm.setIsEnabled(alarmSwitch.isChecked());
-                alarmsRepository.updateAlarm(newAlarm, new AlarmsRepository.UpdateCallback() {
-                    @Override
-                    public void onUpdate(int updateSuccessful) {
-
-                    }
-                });
+                alarmsRepository.updateAlarm(newAlarm);
                 alarmManager.rescheduleAlarms(context);
 
                 notifyDataSetChanged();

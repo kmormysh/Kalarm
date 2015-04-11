@@ -109,8 +109,7 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         getAlarmsCallback.onGotAllAlarms(alarmList);
     }
 
-    public void updateAlarm(Alarm alarm, UpdateCallback callback){
-        this.updateCallback = callback;
+    public void updateAlarm(Alarm alarm){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -122,9 +121,8 @@ public class AlarmsRepository extends SQLiteOpenHelper {
         values.put(KEY_REPEAT, alarm.getRepeatedWeekly() ? 1 : 0);
         values.put(KEY_ENABLE, alarm.getIsEnabled() ? 1 : 0);
 
-        this.updateCallback.onUpdate(db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(alarm.getId())}));
-
+        db.update(TABLE_ALARMS, values, KEY_ID + " = ?",
+                new String[]{String.valueOf(alarm.getId())});
     }
 
     public void deleteAlarm(Alarm alarmToDelete, DeleteCallback callback){

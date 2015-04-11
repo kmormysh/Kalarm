@@ -26,7 +26,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener, AlarmsRepository.UpdateCallback, AlarmsRepository.DeleteCallback, AlarmsRepository.GetAlarmsCallback, AlarmsRepository.CreateAlarmCallback {
+public class MainActivity extends ActionBarActivity implements AlarmSetupDialogFragment.DialogCloseListener, AlarmsRepository.DeleteCallback, AlarmsRepository.GetAlarmsCallback, AlarmsRepository.CreateAlarmCallback {
 
     private AlarmsRepository alarmsRepository;
     private AlarmManager alarmManager;
@@ -130,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
         Alarm updateAlarm = new Alarm(alarm_id, hours, minutes, name, days, isRepeat, false);
 //        alarmsRepository.getAlarm(alarm_id, this);
         if (updateAlarm.isAtLeastOneDaySelected()) {
-            alarmsRepository.updateAlarm(updateAlarm, this);
+            alarmsRepository.updateAlarm(updateAlarm);
             alarmAdapter.getAlarmList();
             alarmAdapter.notifyDataSetChanged();
         }
@@ -143,11 +143,6 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
 
     @Override
     public void onGotAlarm(Alarm alarm) {
-
-    }
-
-    @Override
-    public void onUpdate(int updateSuccessful) {
 
     }
 
