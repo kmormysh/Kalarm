@@ -80,6 +80,24 @@ public class AlarmManager implements AlarmsRepository.GetAlarmsCallback {
         }
     }
 
+    public void scheduleSnooze(Context context, Alarm alarm) {
+        Intent intent = new Intent(context, AlarmService.class);
+        intent.putExtra(HOURS, alarm.getAlarmHours());
+        intent.putExtra(MINUTES, alarm.getAlarmMinutes());
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        Calendar calendar = Calendar.getInstance();
+        int hours = alarm.getAlarmHours();
+        int minutes = alarm.getAlarmMinutes();
+
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+        calendar.set(Calendar.SECOND, 0);
+
+        setAlarm(context, calendar, pendingIntent);
+    }
+
     public void setAlarm(Context context, Calendar calendar, PendingIntent pendingIntent) {
         android.app.AlarmManager am = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.set(android.app.AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

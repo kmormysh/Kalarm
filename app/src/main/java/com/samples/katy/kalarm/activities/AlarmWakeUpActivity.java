@@ -1,9 +1,7 @@
 package com.samples.katy.kalarm.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -12,26 +10,24 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.text.InputType;
-import android.text.Layout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.os.Handler;
 import android.widget.Toast;
 
-import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.R;
+import com.samples.katy.kalarm.models.AlarmManager;
 import com.samples.katy.kalarm.models.MathProblem;
+import com.samples.katy.kalarm.models.pojo.Alarm;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 import butterknife.ButterKnife;
@@ -49,6 +45,7 @@ public class AlarmWakeUpActivity extends Activity {
     private String VOLUME = "volume";
     private String VIBRATE = "vibrate";
     private String DIFFICULTY = "difficulty";
+    private String SNOOZE_LENGTH = "snooze_length";
     private float DEFAULT_VOLUME = 0.5f;
     private Vibrator vibrator;
 
@@ -57,8 +54,27 @@ public class AlarmWakeUpActivity extends Activity {
 
     @OnClick(R.id.snooze)
     void snooze() {
+
+        AlarmManager alarmManager = new AlarmManager(null);
+
         mediaPlayer.stop();
         vibrator.cancel();
+
+        int snooze_length = Integer.parseInt(prefs.getString(SNOOZE_LENGTH, "2"));
+        Alarm alarm = new Alarm(0, getIntent().getIntExtra(AlarmManager.HOURS, 0),
+                getIntent().getIntExtra(AlarmManager.MINUTES, 0), "", new boolean[]{}, false, true);
+
+        alarm.setAlarmMinutes(alarm.getAlarmMinutes() + snooze_length);
+        if (alarm.getAlarmMinutes() > 60) {
+            alarm.setAlarmMinutes(alarm.getAlarmMinutes() - 60);
+            alarm.setAlarmHours(alarm.getAlarmHours() + 1);
+            if (alarm.getAlarmHours() > 24) {
+                alarm.setAlarmHours(alarm.getAlarmHours() - 24);
+            }
+        }
+
+        alarmManager.scheduleSnooze(getApplicationContext(), alarm);
+        finish();
     }
 
     ;
@@ -73,11 +89,10 @@ public class AlarmWakeUpActivity extends Activity {
         final TextView textMathProblem = new TextView(this);
         textMathProblem.setText(mathProblem.getMathProblem() + " = ");
         textMathProblem.setGravity(Gravity.CENTER_HORIZONTAL);
-        textMathProblem.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.text_size));
+        textMathProblem.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size));
         final EditText input = new EditText(this);
         input.setSingleLine();
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setInputType(InputType.TYPE_CLASS_PHONE);
 
         LinearLayout layout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 2);
@@ -152,7 +167,7 @@ public class AlarmWakeUpActivity extends Activity {
         new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
     }
 
-    private boolean playMediaPlayer(String ringtone){
+    private boolean playMediaPlayer(String ringtone) {
         float volume = prefs.getFloat(VOLUME, DEFAULT_VOLUME);
         Uri toneUri = Uri.parse(ringtone);
         mediaPlayer = new MediaPlayer();
