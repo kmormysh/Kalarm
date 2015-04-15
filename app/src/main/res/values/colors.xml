@@ -5,4 +5,5 @@
     <color name="windowBackground">#6C0AAB</color>
     <color name="actionBar">#45036F</color>
     <color name="accent_pressed">#C2185B</color>
+    <color name="button">#9A3FD5</color>
 </resources>
