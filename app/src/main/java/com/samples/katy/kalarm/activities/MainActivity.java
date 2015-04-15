@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.samples.katy.kalarm.models.pojo.Alarm;
 import com.samples.katy.kalarm.adapters.AlarmAdapter;
@@ -33,6 +34,8 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
     private AlarmAdapter alarmAdapter;
     private List<Alarm> alarms;
 
+    @InjectView(R.id.txt_no_alarms)
+    TextView noAlarms;
     @InjectView(R.id.alarm_list) ListView alarmList;
     @OnClick(R.id.btn_setalarm) void setAlarm() {
         AlarmSetupDialogFragment dialog = new AlarmSetupDialogFragment();
@@ -139,6 +142,7 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
     @Override
     public void onGotAllAlarms(List<Alarm> alarm) {
         this.alarms = alarm;
+        setTextViewVisibility();
     }
 
     @Override
@@ -148,11 +152,19 @@ public class MainActivity extends ActionBarActivity implements AlarmSetupDialogF
 
     @Override
     public void onDelete() {
-
+        setTextViewVisibility();
     }
 
     @Override
     public void onCreate() {
+        setTextViewVisibility();
+    }
 
+    private void setTextViewVisibility(){
+        if (alarms.size() > 0) {
+            noAlarms.setVisibility(View.GONE);
+        } else {
+            noAlarms.setVisibility(View.VISIBLE);
+        }
     }
 }
