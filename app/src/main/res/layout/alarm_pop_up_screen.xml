@@ -22,8 +22,7 @@
         android:layout_above="@+id/dismiss"
         android:layout_margin="5sp"
         android:height="130sp"
-        android:text="Snooze"
-        android:textSize="32dp" />
+        android:text="@string/snooze" />
 
     <Button
         android:id="@+id/dismiss"
@@ -32,7 +31,6 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="5sp"
         android:height="80sp"
-        android:text="Dismiss"
-        android:textSize="32dp" />
+        android:text="@string/dismiss" />
 
 </RelativeLayout>
