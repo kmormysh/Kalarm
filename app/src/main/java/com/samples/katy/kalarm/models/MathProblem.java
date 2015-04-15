@@ -115,9 +115,9 @@ public class MathProblem {
                 integerOne = Integer.valueOf(newStack.pop());
                 integerTwo = Integer.valueOf(newStack.pop());
                 int result = token.compareTo(OP_ADD) == 0 ? integerTwo + integerOne :
-                        token.compareTo(OP_SUBTRACT) == 0 ? integerTwo - integerOne :
-                                token.compareTo(OP_MULTIPLY) == 0 ? integerTwo * integerOne :
-                                        integerTwo / integerOne;
+                        token.compareTo(OP_SUBTRACT) == 0 ? integerOne - integerTwo :
+                                token.compareTo(OP_MULTIPLY) == 0 ? (integerTwo * integerOne) :
+                                        (int)((double)integerOne / integerTwo);
 
                 newStack.push(String.valueOf(result));
             }
